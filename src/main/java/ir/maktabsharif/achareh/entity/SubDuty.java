@@ -1,15 +1,10 @@
 package ir.maktabsharif.achareh.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "sub_duty")
+@ToString
 public class SubDuty extends BaseEntity<Long> {
 
     @NotEmpty(message = "name cannot be empty")
@@ -35,4 +31,8 @@ public class SubDuty extends BaseEntity<Long> {
 
     @ManyToMany(mappedBy = "sub_duties")
     private List<User> users = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "duty_id", referencedColumnName = "id")
+    private Duty duty;
 }
