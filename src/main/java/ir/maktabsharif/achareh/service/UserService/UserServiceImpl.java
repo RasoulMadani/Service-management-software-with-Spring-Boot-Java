@@ -1,7 +1,11 @@
 package ir.maktabsharif.achareh.service.UserService;
 
 
+import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
 import ir.maktabsharif.achareh.dto.user.UserRequestDto;
+import ir.maktabsharif.achareh.dto.user.UserResponseDto;
+import ir.maktabsharif.achareh.entity.Duty;
+import ir.maktabsharif.achareh.entity.SubDuty;
 import ir.maktabsharif.achareh.entity.User;
 import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
@@ -39,5 +43,19 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public UserResponseDto confirmedUser(Long id) {
+        User user = userRepository
+                .findById(id)
+                .orElseThrow(() -> new RuleException("{user.not.found}"));
+
+
+        user.setStatus(StatusUserEnum.CONFIRMED);
+
+        user = userRepository.save(user);
+        return new UserResponseDto(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getRole(),user.getStatus());
+
     }
 }

@@ -12,4 +12,5 @@ import java.util.List;
 public interface DutyService {
     DutyResponseDto save(DutyRequestDto dutyRequestDto);
     List<SubDutyResponseDto> getSubDuties(Long id);
+    List<DutyResponseDto> getDuties();
 }

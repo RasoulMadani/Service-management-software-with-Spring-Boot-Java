@@ -25,10 +25,15 @@ public class DutyController {
 
         return ResponseEntity.ok(dutyService.save(dutyRequestDto));
     }
-    @GetMapping
+    @GetMapping("/sub_duties")
     public ResponseEntity<List<SubDutyResponseDto>> getSubDuties(@RequestParam Long id) {
 
         return ResponseEntity.ok(dutyService.getSubDuties(id));
+    }
+    @GetMapping
+    public ResponseEntity<List<DutyResponseDto>> getSubDuties() {
+
+        return ResponseEntity.ok(dutyService.getDuties());
     }
 
 }

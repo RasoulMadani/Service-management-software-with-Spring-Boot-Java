@@ -1,18 +1,12 @@
 package ir.maktabsharif.achareh.service.dutyService;
 
-import ir.maktabsharif.achareh.dto.duty.DutyFindSubDutyRequestDto;
 import ir.maktabsharif.achareh.dto.duty.DutyRequestDto;
 import ir.maktabsharif.achareh.dto.duty.DutyResponseDto;
 import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
-import ir.maktabsharif.achareh.dto.user.UserRequestDto;
 import ir.maktabsharif.achareh.entity.Duty;
 import ir.maktabsharif.achareh.entity.SubDuty;
-import ir.maktabsharif.achareh.entity.User;
-import ir.maktabsharif.achareh.enums.RoleUserEnum;
-import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.DutyJpaRepository;
-import ir.maktabsharif.achareh.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,23 +28,40 @@ public class DutyServiceImpl implements DutyService {
         Duty duty = new Duty(dutyRequestDto.name());
 
         Duty duty1 = dutyJpaRepository.save(duty);
-        return new DutyResponseDto(duty1.getName());
+        return new DutyResponseDto(duty1.getId(),duty1.getName());
     }
 
+    @Override
     public List<SubDutyResponseDto> getSubDuties(Long id) {
         Duty duty = dutyJpaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("{duty.not.found}"));
-        return this.getAllSubDuties(duty.getSubDuties(), id);
+        return this.getAllSubDutiesDto(duty.getSubDuties(), id);
 
     }
 
-    private SubDutyResponseDto convertToDto(SubDuty subDuty, Long duty_id) {
+    @Override
+    public List<DutyResponseDto> getDuties() {
+        List<Duty> duty = dutyJpaRepository.findAll();
+        return this.getAllDutiesDto(duty);
+    }
+
+    private SubDutyResponseDto convertToSubDutyDto(SubDuty subDuty, Long duty_id) {
         return new SubDutyResponseDto(subDuty.getId(), duty_id, subDuty.getName(), subDuty.getDefinition(), subDuty.getBase_price());
     }
 
-    public List<SubDutyResponseDto> getAllSubDuties(List<SubDuty> subDuties, Long duty_id) {
+    public List<SubDutyResponseDto> getAllSubDutiesDto(List<SubDuty> subDuties, Long duty_id) {
         return subDuties.stream()
-                .map((subDuty) -> convertToDto(subDuty, duty_id))
+                .map((subDuty) -> convertToSubDutyDto(subDuty, duty_id))
+                .collect(Collectors.toList());
+    }
+
+    private DutyResponseDto convertToDutyResponseDto(Duty duty) {
+        return new DutyResponseDto(duty.getId(),duty.getName());
+    }
+
+    public List<DutyResponseDto> getAllDutiesDto(List<Duty> duties) {
+        return duties.stream()
+                .map(this::convertToDutyResponseDto)
                 .collect(Collectors.toList());
     }
 }
