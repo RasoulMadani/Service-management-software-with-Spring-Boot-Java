@@ -21,33 +21,32 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(RuleException.class)
-    public ResponseEntity<List<ExceptionResponse>> handleRuleException(RuleException ruleException){
-        return  ResponseEntity
-                    .status(400)
-                    .body(Collections.singletonList(getBuild(ruleException)));
+    public ResponseEntity<List<ExceptionResponse>> handleRuleException(RuleException ruleException) {
+        return ResponseEntity
+                .status(400)
+                .body(Collections.singletonList(getBuild(ruleException)));
     }
 
-    private  ExceptionResponse getBuild(RuleException ruleException) {
+    private ExceptionResponse getBuild(RuleException ruleException) {
         return ExceptionResponse.builder()
-                .message(messageSourceAccessor.getMessage(ruleException.getMessage()))
+                .message(messageSourceAccessor.getMessage(ruleException.getMessage(), ruleException.getLocalizedMessage())) // پیام پیش‌فرض اگر کلید یافت نشود
                 .property(ruleException.getMessage())
                 .build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<ExceptionResponse>> handlerMethodArgumentNotValidException(MethodArgumentNotValidException methodArgumentNotValidException){
-        return ResponseEntity.status(402)
-                .body(MethodArgumentNotValidExceptionToExceptionResponse(methodArgumentNotValidException));
+    public ResponseEntity<List<ExceptionResponse>> handlerMethodArgumentNotValidException(MethodArgumentNotValidException methodArgumentNotValidException) {
+        return ResponseEntity.status(400) // تغییر وضعیت به 400
+                .body(convertFieldErrorsToResponses(methodArgumentNotValidException));
     }
 
-    private List<ExceptionResponse> MethodArgumentNotValidExceptionToExceptionResponse(MethodArgumentNotValidException methodArgumentNotValidException){
-       return   methodArgumentNotValidException.getFieldErrors().stream().map(
-                 error->ExceptionResponse
-                         .builder()
-                         .message(error.getDefaultMessage())
-                         .property(error.getCode())
-                         .build()
-         ).collect(Collectors.toList());
-
+    private List<ExceptionResponse> convertFieldErrorsToResponses(MethodArgumentNotValidException methodArgumentNotValidException) {
+        return methodArgumentNotValidException.getFieldErrors().stream().map(
+                error -> ExceptionResponse
+                        .builder()
+                        .message(error.getDefaultMessage())
+                        .property(error.getField()) // تغییر به getField
+                        .build()
+        ).collect(Collectors.toList());
     }
 }

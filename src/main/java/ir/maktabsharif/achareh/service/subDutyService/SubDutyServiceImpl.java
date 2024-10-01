@@ -19,20 +19,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubDutyServiceImpl implements SubDutyService {
     private final SubDutyJpaRepository subDutyJpaRepository;
+    private final DutyJpaRepository dutyJpaRepository;
 
     @Override
     public SubDutyResponseDto save(SubDutyRequestDto subDutyRequestDto) {
-        Optional<SubDuty> findByName = subDutyJpaRepository.findByDutyIdAndName(1L,"allah");
-        if (findByName.isPresent()) throw new RuleException("name.is.exist");
+        Optional<SubDuty> findByDutyIdAndName = subDutyJpaRepository.findByDutyIdAndName(subDutyRequestDto.duty_id(), subDutyRequestDto.name());
+        if (findByDutyIdAndName.isPresent()) throw new RuleException("{sub.duty.is.exist}");
 
-//        if (findByName.isPresent()) throw new RuleException("{name.is.exist}");
-//
-//
-//        Duty duty = new Duty(dutyRequestDto.name());
-//
-//        Duty duty1 = dutyJpaRepository.save(duty);
-//        return new DutyResponseDto(duty1.getName());
-//        return null;
-        return null;
+        Optional<Duty> findDuty = dutyJpaRepository.findById(subDutyRequestDto.duty_id());
+        if (findDuty.isEmpty()) throw new RuleException("{duty.is.not.exist}");
+
+        SubDuty subDuty = new SubDuty(subDutyRequestDto.name(), subDutyRequestDto.base_price(), subDutyRequestDto.definition(), findDuty.get());
+        SubDuty subDuty1 = subDutyJpaRepository.save(subDuty);
+        return new SubDutyResponseDto(subDuty1.getId(), findDuty.get().getId(), subDuty1.getName(), subDuty1.getDefinition(), subDuty1.getBase_price());
     }
 }

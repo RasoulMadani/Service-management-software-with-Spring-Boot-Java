@@ -18,15 +18,21 @@ import java.util.List;
 @Table(name = "sub_duty")
 @ToString
 public class SubDuty extends BaseEntity<Long> {
+    public SubDuty(String name, Double base_price, String definition,Duty duty) {
+        this.name = name;
+        this.base_price = base_price;
+        this.definition = definition;
+        this.duty = duty;
+    }
 
     @NotEmpty(message = "name cannot be empty")
     @NotNull(message = "name cannot be null")
     @Size(min = 3, max = 15, message = "name must be between 3 and 15 characters")
     private String name;
 
-    private Long base_price;
+    private Double base_price;
 
-    @Size(min = 10, max = 300, message = "name must be between 10 and 300 characters")
+    @Size(min = 15, max = 300, message = "definition must be at least 15 characters")
     private String definition;
 
     @ManyToMany(mappedBy = "sub_duties")
