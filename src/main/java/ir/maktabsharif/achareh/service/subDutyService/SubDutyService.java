@@ -6,4 +6,5 @@ import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
 
 public interface SubDutyService {
     SubDutyResponseDto save(SubDutyRequestDto subDutyRequestDto);
+    SubDutyResponseDto update(SubDutyRequestDto subDutyRequestDto);
 }

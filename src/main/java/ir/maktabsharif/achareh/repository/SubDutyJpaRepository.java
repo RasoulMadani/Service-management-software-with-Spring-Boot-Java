@@ -10,7 +10,5 @@ import java.util.Optional;
 
 public interface SubDutyJpaRepository extends JpaRepository<SubDuty,Long>{
 
-//    @Query("select s from SubDuty s where s.dutyId=1")
-//    List<SubDuty> getAllSubDutiesWithDutyId();
     Optional<SubDuty> findByDutyIdAndName(Long dutyId, String name);
 }

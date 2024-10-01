@@ -32,7 +32,7 @@ public class SubDuty extends BaseEntity<Long> {
 
     private Double base_price;
 
-    @Size(min = 15, max = 300, message = "definition must be at least 15 characters")
+    @Size(min = 15, message = "{definition must be at least 15 characters}")
     private String definition;
 
     @ManyToMany(mappedBy = "sub_duties")

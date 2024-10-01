@@ -9,10 +9,7 @@ import ir.maktabsharif.achareh.service.subDutyService.SubDutyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -26,5 +23,9 @@ public class SubDutyController {
 
         return ResponseEntity.ok(subDutyService.save(subDutyRequestDto));
     }
+    @PutMapping
+    public ResponseEntity<SubDutyResponseDto> update(@Valid @RequestBody SubDutyRequestDto subDutyRequestDto) {
 
+        return ResponseEntity.ok(subDutyService.update(subDutyRequestDto));
+    }
 }
