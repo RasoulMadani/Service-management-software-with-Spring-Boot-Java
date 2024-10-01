@@ -28,4 +28,9 @@ public class SubDutyController {
 
         return ResponseEntity.ok(subDutyService.update(subDutyRequestDto));
     }
+    @PostMapping("/{userId}/subDuty/{subDutyId}")
+    public ResponseEntity<String> enrollUserInSubDuty(@PathVariable Long userId, @PathVariable Long subDutyId) {
+        subDutyService.enrollUserInSubDuty(userId, subDutyId);
+        return ResponseEntity.ok("{user.enrolled.in.sub_duty.successfully}");
+    }
 }

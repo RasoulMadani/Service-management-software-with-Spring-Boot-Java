@@ -61,6 +61,7 @@ public class User extends BaseEntity<Long> {
             joinColumns = @JoinColumn(name = "user_id"), // کلید مربوط به user
             inverseJoinColumns = @JoinColumn(name = "sub_duty_id") // کلید مربوط به sub_duty
     )
+    @Builder.Default
     private List<SubDuty> sub_duties = new ArrayList<>();
 
 
@@ -68,8 +69,18 @@ public class User extends BaseEntity<Long> {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
+
     @OneToMany(targetEntity = Order.class , mappedBy="user")
+    @Builder.Default
     private List<Order> orders = new ArrayList<>();
 
+    public void addSubDuty(SubDuty subDuty) {
+        this.sub_duties.add(subDuty);
+        subDuty.getUsers().add(this);
+    }
 
+    public void removeSubDuty(SubDuty subDuty) {
+        this.sub_duties.remove(subDuty);
+        subDuty.getUsers().remove(this);
+    }
 }
