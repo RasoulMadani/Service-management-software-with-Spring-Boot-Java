@@ -1,9 +1,8 @@
 package ir.maktabsharif.achareh.service.orderService;
 
+import ir.maktabsharif.achareh.dto.duty.DutyResponseDto;
 import ir.maktabsharif.achareh.dto.order.OrderRequestDto;
 import ir.maktabsharif.achareh.dto.order.OrderResponseDto;
-import ir.maktabsharif.achareh.dto.subDuty.SubDutyRequestDto;
-import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
 import ir.maktabsharif.achareh.entity.*;
 import ir.maktabsharif.achareh.enums.StatusSuggestionEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
@@ -13,6 +12,9 @@ import ir.maktabsharif.achareh.repository.UserJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,42 +27,45 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDto save(OrderRequestDto orderRequestDto) {
 
-        User findUser =
-                userJpaRepository.findById(orderRequestDto.user_id())
-                        .orElseThrow(() -> new RuleException("user.not.found"));
+        User findUser = userJpaRepository.findById(orderRequestDto.user_id()).orElseThrow(() -> new RuleException("user.not.found"));
 
-        SubDuty subDuy =
-                subDutyJpaRepository.findById(orderRequestDto.sub_duty_id())
-                        .orElseThrow(() -> new RuleException("sub_duty.not.found"));
+        SubDuty subDuy = subDutyJpaRepository.findById(orderRequestDto.sub_duty_id()).orElseThrow(() -> new RuleException("sub_duty.not.found"));
 
         if (subDuy.getBase_price() > orderRequestDto.suggestionPrice())
             throw new RuleException("suggestion_price.smaller.than.base_price");
         Address address = new Address(orderRequestDto.province(), orderRequestDto.city(), orderRequestDto.street(), orderRequestDto.addressDetails());
 
-        Order order1 = Order.builder()
-                .address(address)
-                .suggestionPrice(orderRequestDto.suggestionPrice())
-                .date(orderRequestDto.date())
-                .time(orderRequestDto.time())
-                .status(StatusSuggestionEnum.WAITING_SUGGESTION)
-                .subDuty(subDuy)
-                .user(findUser)
-                .description(orderRequestDto.description())
-                .build();
+        Order order1 = Order.builder().address(address).suggestionPrice(orderRequestDto.suggestionPrice()).date(orderRequestDto.date()).time(orderRequestDto.time()).status(StatusSuggestionEnum.WAITING_SUGGESTION).subDuty(subDuy).user(findUser).description(orderRequestDto.description()).build();
         Order savedOrder = orderJpaRepository.save(order1);
 
+        return new OrderResponseDto(savedOrder.getId(), findUser.getId(), subDuy.getId(), savedOrder.getSuggestionPrice(), savedOrder.getDescription(), address.getProvince(), address.getCity(), address.getStreet(), address.getDetails(), savedOrder.getDate(), savedOrder.getTime());
+    }
+
+    @Override
+    public List<OrderResponseDto> getOrdersBySubDutyId(Long subDutyId) {
+        List<StatusSuggestionEnum> statuses = List.of(StatusSuggestionEnum.WAITING_SUGGESTION, StatusSuggestionEnum.SELECT);
+        List<Order> orders = orderJpaRepository.findBySubDutyIdAndStatusIn(subDutyId,statuses);
+        return this.getAllOrdersDto(orders);
+
+    }
+
+    public List<OrderResponseDto> getAllOrdersDto(List<Order> orders) {
+        return orders.stream().map(this::convertToOrderResponseDto).collect(Collectors.toList());
+    }
+
+    private OrderResponseDto convertToOrderResponseDto(Order order) {
         return new OrderResponseDto(
-                savedOrder.getId(),
-                findUser.getId(),
-                subDuy.getId(),
-                savedOrder.getSuggestionPrice(),
-                savedOrder.getDescription(),
-                address.getProvince(),
-                address.getCity(),
-                address.getStreet(),
-                address.getDetails(),
-                savedOrder.getDate(),
-                savedOrder.getTime()
+                order.getId(),
+                order.getUser().getId(),
+                order.getSubDuty().getId(),
+                order.getSuggestionPrice(),
+                order.getDescription(),
+                order.getAddress().getProvince(),
+                order.getAddress().getCity(),
+                order.getAddress().getStreet(),
+                order.getAddress().getDetails(),
+                order.getDate(),
+                order.getTime()
         );
     }
 }
