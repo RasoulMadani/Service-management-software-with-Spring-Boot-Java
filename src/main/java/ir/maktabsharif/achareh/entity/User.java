@@ -21,6 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class User extends BaseEntity<Long> {
+
     public User() {
     }
 
@@ -73,6 +74,8 @@ public class User extends BaseEntity<Long> {
     @OneToMany(targetEntity = Order.class , mappedBy="user")
     @Builder.Default
     private List<Order> orders = new ArrayList<>();
+
+
 
     public void addSubDuty(SubDuty subDuty) {
         this.sub_duties.add(subDuty);

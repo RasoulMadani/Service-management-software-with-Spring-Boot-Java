@@ -41,4 +41,7 @@ public class SubDuty extends BaseEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "duty_id", referencedColumnName = "id")
     private Duty duty;
+
+    @OneToMany(targetEntity = Order.class , mappedBy="subDuty")
+    private List<Order> orders = new ArrayList<>();
 }

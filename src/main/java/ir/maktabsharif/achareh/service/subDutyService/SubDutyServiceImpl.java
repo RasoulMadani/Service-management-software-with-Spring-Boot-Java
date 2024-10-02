@@ -28,10 +28,10 @@ public class SubDutyServiceImpl implements SubDutyService {
 
     @Override
     public SubDutyResponseDto save(SubDutyRequestDto subDutyRequestDto) {
-        SubDuty findByDutyIdAndName =
-                subDutyJpaRepository.findByDutyIdAndName(subDutyRequestDto.duty_id(), subDutyRequestDto.name())
-                        .orElseThrow(() -> new RuleException("sub.duty.is.exist"));
+        Optional<SubDuty> findByDutyIdAndName =
+                subDutyJpaRepository.findByDutyIdAndName(subDutyRequestDto.duty_id(), subDutyRequestDto.name());
 
+        if(findByDutyIdAndName.isPresent()) throw new RuleException("sub.duty.is.exist");
 
         Duty findDuty = dutyJpaRepository.findById(subDutyRequestDto.duty_id())
                 .orElseThrow(() -> new RuleException("duty.is.not.exist"));

@@ -7,10 +7,7 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -24,8 +21,9 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "orders")
+@Builder
 public class Order extends BaseEntity<Long>{
-    private Long suggestionPrice;
+    private Double suggestionPrice;
 
 
     @NotEmpty(message = "description cannot be empty")
@@ -44,7 +42,7 @@ public class Order extends BaseEntity<Long>{
 
 
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
@@ -57,10 +55,16 @@ public class Order extends BaseEntity<Long>{
     @JoinColumn(name = "score_id", referencedColumnName = "id")
     private Score score;
 
+    @ManyToOne
+    @JoinColumn(name = "sub_duty_id", referencedColumnName = "id")
+    private SubDuty subDuty;
+
     @OneToMany(targetEntity = OrderComment.class , mappedBy="order")
+    @Builder.Default
     private List<OrderComment> comments = new ArrayList<>();
 
     @OneToMany(targetEntity = Suggestion.class , mappedBy="order")
+    @Builder.Default
     private List<Suggestion> suggestions = new ArrayList<>();
 
 }
