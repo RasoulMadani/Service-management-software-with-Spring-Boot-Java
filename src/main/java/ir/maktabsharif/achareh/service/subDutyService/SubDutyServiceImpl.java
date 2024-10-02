@@ -12,6 +12,7 @@ import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.DutyJpaRepository;
 import ir.maktabsharif.achareh.repository.SubDutyJpaRepository;
 import ir.maktabsharif.achareh.repository.UserJpaRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +30,11 @@ public class SubDutyServiceImpl implements SubDutyService {
     public SubDutyResponseDto save(SubDutyRequestDto subDutyRequestDto) {
         SubDuty findByDutyIdAndName =
                 subDutyJpaRepository.findByDutyIdAndName(subDutyRequestDto.duty_id(), subDutyRequestDto.name())
-                        .orElseThrow(() -> new RuleException("{sub.duty.is.exist}"));
+                        .orElseThrow(() -> new RuleException("sub.duty.is.exist"));
 
 
         Duty findDuty = dutyJpaRepository.findById(subDutyRequestDto.duty_id())
-                .orElseThrow(() -> new RuleException("{duty.is.not.exist}"));
+                .orElseThrow(() -> new RuleException("duty.is.not.exist"));
 
 
         SubDuty subDuty = new SubDuty(subDutyRequestDto.name(), subDutyRequestDto.base_price(), subDutyRequestDto.definition(), findDuty);
@@ -45,11 +46,11 @@ public class SubDutyServiceImpl implements SubDutyService {
     public SubDutyResponseDto update(SubDutyRequestDto subDutyRequestDto) {
         SubDuty subDuty = subDutyJpaRepository
                 .findById(subDutyRequestDto.id())
-                .orElseThrow(() -> new RuleException("{sub.duty.is.not.exist}"));
+                .orElseThrow(() -> new RuleException("sub.duty.is.not.exist"));
 
         Duty duty = dutyJpaRepository
                 .findById(subDutyRequestDto.duty_id())
-                .orElseThrow(() -> new RuleException("{duty.is.not.exist}"));
+                .orElseThrow(() -> new RuleException("duty.is.not.exist"));
 
 
         subDuty.setName(subDutyRequestDto.name());
@@ -63,11 +64,12 @@ public class SubDutyServiceImpl implements SubDutyService {
     }
 
     @Override
+    @Transactional
     public void enrollUserInSubDuty(Long userId, Long subDutyId) {
         Optional<User> userOptional = userJpaRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if (user.getStatus() != StatusUserEnum.CONFIRMED) throw new RuleException("{user.not.confirmed}");
+            if (user.getStatus() != StatusUserEnum.CONFIRMED) throw new RuleException("user.not.confirmed");
 
             Optional<SubDuty> subDutyOptional = subDutyJpaRepository.findById(subDutyId);
 
@@ -78,10 +80,10 @@ public class SubDutyServiceImpl implements SubDutyService {
                 user.addSubDuty(subDuty);
                 userJpaRepository.save(user);
             } else {
-                throw new RuleException("{sub_duty.not.found}");
+                throw new RuleException("sub_duty.not.found");
             }
         } else {
-            throw new RuleException("{user.not.found}");
+            throw new RuleException("user.not.found");
         }
     }
 }

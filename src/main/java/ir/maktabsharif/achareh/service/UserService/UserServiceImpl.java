@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto confirmedUser(Long id) {
         User user = userRepository
                 .findById(id)
-                .orElseThrow(() -> new RuleException("{user.not.found}"));
+                .orElseThrow(() -> new RuleException("user.not.found"));
 
 
         user.setStatus(StatusUserEnum.CONFIRMED);

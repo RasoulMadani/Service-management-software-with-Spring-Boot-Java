@@ -22,7 +22,7 @@ public class DutyServiceImpl implements DutyService {
     @Override
     public DutyResponseDto save(DutyRequestDto dutyRequestDto) {
         Optional<Duty> findByName = dutyJpaRepository.findByName(dutyRequestDto.name());
-        if (findByName.isPresent()) throw new RuleException("{name.is.exist}");
+        if (findByName.isPresent()) throw new RuleException("name.is.exist");
 
 
         Duty duty = new Duty(dutyRequestDto.name());
@@ -34,7 +34,7 @@ public class DutyServiceImpl implements DutyService {
     @Override
     public List<SubDutyResponseDto> getSubDuties(Long id) {
         Duty duty = dutyJpaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("{duty.not.found}"));
+                .orElseThrow(() -> new RuleException("duty.not.found"));
         return this.getAllSubDutiesDto(duty.getSubDuties(), id);
 
     }
