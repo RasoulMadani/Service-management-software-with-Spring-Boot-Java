@@ -48,6 +48,15 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public void changeOrderStatusToStarting(Long orderId) {
+        Order order =
+                orderJpaRepository.findById(orderId)
+                        .orElseThrow(() -> new RuleException("order.not.found"));
+        order.setStatus(StatusOrderEnum.STARTING);
+        orderJpaRepository.save(order);
+    }
+
     public List<OrderResponseDto> getAllOrdersDto(List<Order> orders) {
         return orders.stream().map(this::convertToOrderResponseDto).collect(Collectors.toList());
     }

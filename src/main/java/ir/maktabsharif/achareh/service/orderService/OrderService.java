@@ -9,4 +9,5 @@ public interface OrderService {
     OrderResponseDto save(OrderRequestDto orderRequestDto);
 
     List<OrderResponseDto> getOrdersBySubDutyId(Long subDutyId);
+    void changeOrderStatusToStarting(Long orderId);
 }

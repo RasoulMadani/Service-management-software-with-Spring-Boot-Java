@@ -1,5 +1,6 @@
 package ir.maktabsharif.achareh.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import ir.maktabsharif.achareh.dto.order.OrderRequestDto;
 import ir.maktabsharif.achareh.dto.order.OrderResponseDto;
 import ir.maktabsharif.achareh.service.orderService.OrderService;
@@ -25,4 +26,12 @@ public class OrderController {
        ;
         return ResponseEntity.ok( orderService.getOrdersBySubDutyId(subDutyId));
     }
+
+    @PostMapping("/{orderId}")
+    @Operation(summary = "change order status to starting with order id")
+    public ResponseEntity<String> changeOrderStatusToStarting(@PathVariable Long orderId) {
+          orderService.changeOrderStatusToStarting(orderId);
+         return ResponseEntity.ok("change.status.successfully");
+    }
+
 }
