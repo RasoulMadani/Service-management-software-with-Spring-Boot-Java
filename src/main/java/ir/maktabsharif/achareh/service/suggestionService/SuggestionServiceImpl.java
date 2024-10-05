@@ -74,6 +74,17 @@ public class SuggestionServiceImpl implements SuggestionService {
         return this.getAllSuggestionsDto(suggestions);
     }
 
+    @Override
+    public void selectSpecialist(Long suggestionId) {
+        Suggestion  suggestion =
+                suggestionJpaRepository.findById(suggestionId)
+                        .orElseThrow(() -> new RuleException("suggestion.not.found"));
+        Order  order = suggestion.getOrder();
+        order.setSuggestion(suggestion);
+        order.setStatus(StatusOrderEnum.COMING);
+        orderJpaRepository.save(order);
+    }
+
     public List<SuggestionResponseDto> getAllSuggestionsDto(List<Suggestion> suggestions) {
         return suggestions.stream().map(this::convertToSuggestionsResponseDto).collect(Collectors.toList());
     }

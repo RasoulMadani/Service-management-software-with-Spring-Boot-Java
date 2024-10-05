@@ -52,6 +52,10 @@ public class Order extends BaseEntity<Long>{
     @JoinColumn(name = "score_id", referencedColumnName = "id")
     private Score score;
 
+    @OneToOne
+    @JoinColumn(name = "suggestion_id", referencedColumnName = "id")
+    private Suggestion suggestion;
+
     @ManyToOne
     @JoinColumn(name = "sub_duty_id", referencedColumnName = "id")
     private SubDuty subDuty;

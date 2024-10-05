@@ -10,4 +10,5 @@ import java.util.List;
 public interface SuggestionService {
     SuggestionResponseDto save(SuggestionRequestDto suggestionRequestDto);
     List<SuggestionResponseDto> getAllByOrderId(Long orderId);
+    void selectSpecialist(Long suggestionId);
 }

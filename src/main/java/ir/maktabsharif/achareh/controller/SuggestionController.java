@@ -28,4 +28,9 @@ public class SuggestionController {
     public ResponseEntity<List<SuggestionResponseDto>> getAllByOrderId(@PathVariable Long orderId) {
         return ResponseEntity.ok(suggestionService.getAllByOrderId(orderId));
     }
+    @PostMapping("/{suggestionId}")
+    public ResponseEntity<String> selectSpecialist(@PathVariable Long suggestionId) {
+        suggestionService.selectSpecialist(suggestionId);
+        return ResponseEntity.ok("suggestion.accepted");
+    }
 }
