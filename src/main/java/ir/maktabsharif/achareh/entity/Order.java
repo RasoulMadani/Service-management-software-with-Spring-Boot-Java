@@ -1,12 +1,9 @@
 package ir.maktabsharif.achareh.entity;
 
 
-import ir.maktabsharif.achareh.enums.StatusSuggestionEnum;
+import ir.maktabsharif.achareh.enums.StatusOrderEnum;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -33,7 +30,7 @@ public class Order extends BaseEntity<Long>{
 
 
     @Enumerated(EnumType.STRING)
-    private StatusSuggestionEnum status;
+    private StatusOrderEnum status;
 
 
     @ManyToOne
@@ -46,7 +43,7 @@ public class Order extends BaseEntity<Long>{
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @Future(message = "Event date must in the future")
+    @FutureOrPresent(message = "Event date must in the future")
     private LocalDate date;
 
     private LocalTime time;

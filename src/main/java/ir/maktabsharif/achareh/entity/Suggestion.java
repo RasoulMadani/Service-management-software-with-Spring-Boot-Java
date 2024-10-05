@@ -4,11 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
-import lombok.Getter;
-import lombok.Setter;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,9 +15,9 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-
+@Builder
 public class Suggestion extends BaseEntity<Long>{
-    private Long suggestionPrice;
+    private Double suggestionPrice;
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")

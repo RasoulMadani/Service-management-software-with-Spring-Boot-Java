@@ -20,7 +20,7 @@ public class OrderController {
 
         return ResponseEntity.ok(orderService.save(orderRequestDto));
     }
-    @PostMapping("/{subDutyId}")
+    @GetMapping("/{subDutyId}")
     public ResponseEntity<List<OrderResponseDto>> getOrdersBySubDuty(@PathVariable Long subDutyId) {
        ;
         return ResponseEntity.ok( orderService.getOrdersBySubDutyId(subDutyId));

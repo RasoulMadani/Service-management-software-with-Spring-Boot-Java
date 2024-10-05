@@ -1,10 +1,9 @@
 package ir.maktabsharif.achareh.service.orderService;
 
-import ir.maktabsharif.achareh.dto.duty.DutyResponseDto;
 import ir.maktabsharif.achareh.dto.order.OrderRequestDto;
 import ir.maktabsharif.achareh.dto.order.OrderResponseDto;
 import ir.maktabsharif.achareh.entity.*;
-import ir.maktabsharif.achareh.enums.StatusSuggestionEnum;
+import ir.maktabsharif.achareh.enums.StatusOrderEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.OrderJpaRepository;
 import ir.maktabsharif.achareh.repository.SubDutyJpaRepository;
@@ -35,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
             throw new RuleException("suggestion_price.smaller.than.base_price");
         Address address = new Address(orderRequestDto.province(), orderRequestDto.city(), orderRequestDto.street(), orderRequestDto.addressDetails());
 
-        Order order1 = Order.builder().address(address).suggestionPrice(orderRequestDto.suggestionPrice()).date(orderRequestDto.date()).time(orderRequestDto.time()).status(StatusSuggestionEnum.WAITING_SUGGESTION).subDuty(subDuy).user(findUser).description(orderRequestDto.description()).build();
+        Order order1 = Order.builder().address(address).suggestionPrice(orderRequestDto.suggestionPrice()).date(orderRequestDto.date()).time(orderRequestDto.time()).status(StatusOrderEnum.WAITING).subDuty(subDuy).user(findUser).description(orderRequestDto.description()).build();
         Order savedOrder = orderJpaRepository.save(order1);
 
         return new OrderResponseDto(savedOrder.getId(), findUser.getId(), subDuy.getId(), savedOrder.getSuggestionPrice(), savedOrder.getDescription(), address.getProvince(), address.getCity(), address.getStreet(), address.getDetails(), savedOrder.getDate(), savedOrder.getTime());
@@ -43,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponseDto> getOrdersBySubDutyId(Long subDutyId) {
-        List<StatusSuggestionEnum> statuses = List.of(StatusSuggestionEnum.WAITING_SUGGESTION, StatusSuggestionEnum.SELECT);
+        List<StatusOrderEnum> statuses = List.of(StatusOrderEnum.WAITING, StatusOrderEnum.SELECT);
         List<Order> orders = orderJpaRepository.findBySubDutyIdAndStatusIn(subDutyId,statuses);
         return this.getAllOrdersDto(orders);
 

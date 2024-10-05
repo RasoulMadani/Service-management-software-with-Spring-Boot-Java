@@ -1,7 +1,7 @@
 package ir.maktabsharif.achareh.enums;
 
-public enum StatusSuggestionEnum {
-    WAITING_SUGGESTION,
+public enum StatusOrderEnum {
+    WAITING,
     SELECT,
     COMING,
     PERFORMED,
