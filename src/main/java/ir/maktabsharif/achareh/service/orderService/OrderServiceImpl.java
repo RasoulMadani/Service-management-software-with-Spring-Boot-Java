@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,6 +59,10 @@ public class OrderServiceImpl implements OrderService {
 
         Optional<Suggestion> suggestionOptional = Optional.ofNullable(order.getSuggestion());
         suggestionOptional.orElseThrow(()->new RuleException("suggestion.not.accepted.for.this.order"));
+
+
+        if (suggestion.getStartDate().isAfter(LocalDate.now()))
+            throw new RuleException("start.date.is.after.now.date");
 
         order.setStatus(StatusOrderEnum.STARTING);
         orderJpaRepository.save(order);

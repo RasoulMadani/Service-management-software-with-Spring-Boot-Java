@@ -12,9 +12,12 @@ import ir.maktabsharif.achareh.repository.SuggestionJpaRepository;
 import ir.maktabsharif.achareh.repository.UserJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.digester.Rule;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,10 +78,12 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     @Override
-    public void selectSpecialist(Long suggestionId) {
+    public void acceptSuggestionWithId(Long suggestionId) {
         Suggestion  suggestion =
                 suggestionJpaRepository.findById(suggestionId)
                         .orElseThrow(() -> new RuleException("suggestion.not.found"));
+
+
         Order  order = suggestion.getOrder();
         order.setSuggestion(suggestion);
         order.setStatus(StatusOrderEnum.COMING);

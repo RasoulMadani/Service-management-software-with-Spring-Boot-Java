@@ -18,19 +18,21 @@ public class SuggestionController {
     private final SuggestionService suggestionService;
 
     @PostMapping
+    @Operation(summary = "save suggestion")
     public ResponseEntity<SuggestionResponseDto> save(@Valid @RequestBody SuggestionRequestDto suggestionRequestDto) {
 
         return ResponseEntity.ok(suggestionService.save(suggestionRequestDto));
     }
 
     @GetMapping("/{orderId}")
+    @Operation(summary = "get suggestions by order id")
     public ResponseEntity<List<SuggestionResponseDto>> getAllByOrderId(@PathVariable Long orderId) {
         return ResponseEntity.ok(suggestionService.getAllByOrderId(orderId));
     }
     @PostMapping("/{suggestionId}")
     @Operation(summary = "Accept a suggestion", description = "Accepts a suggestion by its ID")
     public ResponseEntity<String> acceptSuggestionWithId(@PathVariable Long suggestionId) {
-        suggestionService.selectSpecialist(suggestionId);
+        suggestionService.acceptSuggestionWithId(suggestionId);
         return ResponseEntity.ok("suggestion.accepted");
     }
 }
