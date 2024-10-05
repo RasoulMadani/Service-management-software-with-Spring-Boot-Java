@@ -68,6 +68,24 @@ public class OrderServiceImpl implements OrderService {
         orderJpaRepository.save(order);
     }
 
+    @Override
+    public void changeOrderStatusToPerformed(Long orderId) {
+        Order order =
+                orderJpaRepository.findById(orderId)
+                        .orElseThrow(() -> new RuleException("order.not.found"));
+
+        Suggestion suggestion = order.getSuggestion();
+
+        Optional<Suggestion> suggestionOptional = Optional.ofNullable(order.getSuggestion());
+        suggestionOptional.orElseThrow(()->new RuleException("suggestion.not.accepted.for.this.order"));
+
+
+        if (suggestion.getStartDate().isAfter(LocalDate.now()))
+            throw new RuleException("start.date.is.after.now.date");
+
+        order.setStatus(StatusOrderEnum.PERFORMED);
+        orderJpaRepository.save(order);
+    }
     public List<OrderResponseDto> getAllOrdersDto(List<Order> orders) {
         return orders.stream().map(this::convertToOrderResponseDto).collect(Collectors.toList());
     }

@@ -27,11 +27,18 @@ public class OrderController {
         return ResponseEntity.ok( orderService.getOrdersBySubDutyId(subDutyId));
     }
 
-    @PostMapping("/{orderId}")
+    @PostMapping("/starting/{orderId}")
     @Operation(summary = "change order status to starting with order id")
     public ResponseEntity<String> changeOrderStatusToStarting(@PathVariable Long orderId) {
           orderService.changeOrderStatusToStarting(orderId);
          return ResponseEntity.ok("change.status.successfully");
+    }
+
+    @PostMapping("/performed/{orderId}")
+    @Operation(summary = "change order status to performed with order id")
+    public ResponseEntity<String> changeOrderStatusToPerformed(@PathVariable Long orderId) {
+        orderService.changeOrderStatusToPerformed(orderId);
+        return ResponseEntity.ok("change.status.successfully");
     }
 
 }
