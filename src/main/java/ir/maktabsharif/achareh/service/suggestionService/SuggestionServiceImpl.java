@@ -1,5 +1,7 @@
 package ir.maktabsharif.achareh.service.suggestionService;
 
+import ir.maktabsharif.achareh.dto.order.OrderResponseDto;
+import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
 import ir.maktabsharif.achareh.dto.suggesion.SuggestionRequestDto;
 import ir.maktabsharif.achareh.dto.suggesion.SuggestionResponseDto;
 import ir.maktabsharif.achareh.entity.*;
@@ -11,6 +13,9 @@ import ir.maktabsharif.achareh.repository.UserJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,4 +61,33 @@ public class SuggestionServiceImpl implements SuggestionService {
         );
 
     }
+
+    @Override
+    public List<SuggestionResponseDto> getAllByOrderId(Long orderId) {
+
+        Order order =
+                orderJpaRepository.findById(orderId)
+                        .orElseThrow(() -> new RuleException("order.not.found"));
+
+        List<Suggestion> suggestions = suggestionJpaRepository.findAllByOrderIdOrderBySuggestionPriceAsc(orderId);
+
+        return this.getAllSuggestionsDto(suggestions);
+    }
+
+    public List<SuggestionResponseDto> getAllSuggestionsDto(List<Suggestion> suggestions) {
+        return suggestions.stream().map(this::convertToSuggestionsResponseDto).collect(Collectors.toList());
+    }
+
+    private SuggestionResponseDto convertToSuggestionsResponseDto(Suggestion suggestion) {
+        return new SuggestionResponseDto(
+                suggestion.getId(),
+                suggestion.getUser().getId(),
+                suggestion.getOrder().getId(),
+                suggestion.getSuggestionPrice(),
+                suggestion.getStartDate(),
+                suggestion.getStartTime(),
+                suggestion.getDurationOfWork()
+        );
+    }
+
 }

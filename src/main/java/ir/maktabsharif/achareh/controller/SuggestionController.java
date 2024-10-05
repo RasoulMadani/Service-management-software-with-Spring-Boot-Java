@@ -8,19 +8,24 @@ import ir.maktabsharif.achareh.service.suggestionService.SuggestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/suggestion")
 @RequiredArgsConstructor
 public class SuggestionController {
     private final SuggestionService suggestionService;
+
     @PostMapping
     public ResponseEntity<SuggestionResponseDto> save(@Valid @RequestBody SuggestionRequestDto suggestionRequestDto) {
 
         return ResponseEntity.ok(suggestionService.save(suggestionRequestDto));
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<List<SuggestionResponseDto>> getAllByOrderId(@PathVariable Long orderId) {
+        return ResponseEntity.ok(suggestionService.getAllByOrderId(orderId));
     }
 }
