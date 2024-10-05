@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,6 +54,11 @@ public class OrderServiceImpl implements OrderService {
         Order order =
                 orderJpaRepository.findById(orderId)
                         .orElseThrow(() -> new RuleException("order.not.found"));
+        Suggestion suggestion = order.getSuggestion();
+
+        Optional<Suggestion> suggestionOptional = Optional.ofNullable(order.getSuggestion());
+        suggestionOptional.orElseThrow(()->new RuleException("suggestion.not.accepted.for.this.order"));
+
         order.setStatus(StatusOrderEnum.STARTING);
         orderJpaRepository.save(order);
     }

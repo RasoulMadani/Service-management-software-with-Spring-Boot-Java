@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 
-@Component
+
 @RequiredArgsConstructor
 public class DatabaseSeeder implements CommandLineRunner {
     private final UserJpaRepository userRepository;
@@ -74,6 +74,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         // ایجاد Order با داده‌های تصادفی
         Order order1 = Order.builder()
                 .description(faker.lorem().paragraph())
+                .suggestionPrice(faker.number().randomDouble(2,210,400))
                 .status(StatusOrderEnum.WAITING)
                 .date(LocalDate.now().plusDays(2))
                 .time(LocalTime.of(10, 0))
@@ -82,6 +83,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .build();
         Order order2 = Order.builder()
                 .description(faker.lorem().paragraph())
+                .suggestionPrice(faker.number().randomDouble(2,210,400))
                 .status(StatusOrderEnum.WAITING)
                 .date(LocalDate.now().plusDays(2))
                 .time(LocalTime.of(10, 0))

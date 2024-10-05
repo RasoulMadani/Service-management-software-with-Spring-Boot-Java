@@ -1,7 +1,6 @@
 package ir.maktabsharif.achareh.controller;
 
-import ir.maktabsharif.achareh.dto.subDuty.SubDutyRequestDto;
-import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import ir.maktabsharif.achareh.dto.suggesion.SuggestionRequestDto;
 import ir.maktabsharif.achareh.dto.suggesion.SuggestionResponseDto;
 import ir.maktabsharif.achareh.service.suggestionService.SuggestionService;
@@ -29,7 +28,8 @@ public class SuggestionController {
         return ResponseEntity.ok(suggestionService.getAllByOrderId(orderId));
     }
     @PostMapping("/{suggestionId}")
-    public ResponseEntity<String> selectSpecialist(@PathVariable Long suggestionId) {
+    @Operation(summary = "Accept a suggestion", description = "Accepts a suggestion by its ID")
+    public ResponseEntity<String> acceptSuggestionWithId(@PathVariable Long suggestionId) {
         suggestionService.selectSpecialist(suggestionId);
         return ResponseEntity.ok("suggestion.accepted");
     }
