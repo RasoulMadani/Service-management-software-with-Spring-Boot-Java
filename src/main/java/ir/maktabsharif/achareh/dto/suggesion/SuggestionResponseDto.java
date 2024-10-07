@@ -13,6 +13,6 @@ public record SuggestionResponseDto(
         LocalDate date,
 
         LocalTime time,
-        String durationOfWork
+        Integer durationOfWork
 ) {
 }

@@ -23,6 +23,7 @@ public record SuggestionRequestDto(
         @NotNull(message = "{Time.Must.Not.Be.Null}")
         LocalTime time,
         @NotNull(message = "{duration_of_work.Must.Not.Be.Null}")
-        String durationOfWork
+        @Min(value = 1,message = "{duration_of_work.Must.equal.or.greater.than.1}")
+        Integer durationOfWork
 ) {
 }

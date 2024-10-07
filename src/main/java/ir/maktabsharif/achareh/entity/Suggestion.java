@@ -31,5 +31,5 @@ public class Suggestion extends BaseEntity<Long>{
 
     private LocalTime startTime;
 
-    private String durationOfWork;
+    private Integer durationOfWork;
 }

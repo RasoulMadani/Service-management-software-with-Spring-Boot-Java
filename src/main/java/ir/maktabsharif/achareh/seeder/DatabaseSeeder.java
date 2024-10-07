@@ -16,104 +16,114 @@ import java.util.Arrays;
 
 
 @RequiredArgsConstructor
+@Component
 public class DatabaseSeeder implements CommandLineRunner {
     private final UserJpaRepository userRepository;
     private final DutyJpaRepository dutyRepository;
     private final SubDutyJpaRepository subDutyRepository;
     private final OrderJpaRepository orderRepository;
     private final SuggestionJpaRepository suggestionRepository;
+
     @Override
     public void run(String... args) throws Exception {
-        Faker faker = new Faker();
+        if (
+                dutyRepository.count() == 0
+                        && userRepository.count() == 0
+                        && subDutyRepository.count() == 0
+                        && orderRepository.count() == 0
+                        && suggestionRepository.count() == 0
+        ) {
+            Faker faker = new Faker();
 
-        // ایجاد Duty با داده‌های تصادفی
-        Duty duty1 = dutyRepository.save(new Duty(faker.job().field()));
-        Duty duty2 = dutyRepository.save(new Duty(faker.job().field()));
+            // ایجاد Duty با داده‌های تصادفی
+            Duty duty1 = dutyRepository.save(new Duty(faker.job().field()));
+            Duty duty2 = dutyRepository.save(new Duty(faker.job().field()));
 
-        // ایجاد SubDuty با داده‌های تصادفی
-        SubDuty subDuty1 = subDutyRepository.save(new SubDuty(
-                faker.job().keySkills(),
-                faker.number().randomDouble(2, 50, 200),
-                faker.lorem().sentence(15),
-                duty1));
+            // ایجاد SubDuty با داده‌های تصادفی
+            SubDuty subDuty1 = subDutyRepository.save(new SubDuty(
+                    faker.job().keySkills(),
+                    faker.number().randomDouble(2, 50, 200),
+                    faker.lorem().sentence(15),
+                    duty1));
 
-        SubDuty subDuty2 = subDutyRepository.save(new SubDuty(
-                faker.job().keySkills(),
-                faker.number().randomDouble(2, 50, 200),
-                faker.lorem().sentence(15),
-                duty2));
+            SubDuty subDuty2 = subDutyRepository.save(new SubDuty(
+                    faker.job().keySkills(),
+                    faker.number().randomDouble(2, 50, 200),
+                    faker.lorem().sentence(15),
+                    duty2));
 
-        // ایجاد User با داده‌های تصادفی
-        User user1 = User.builder()
-                .name(faker.name().firstName())
-                .username(faker.name().username())
-                .email(faker.internet().emailAddress())
-                .password("Password123!")
-                .role(RoleUserEnum.CUSTOMER)
-                .status(StatusUserEnum.NEW_USER)
-                .build();
+            // ایجاد User با داده‌های تصادفی
+            User user1 = User.builder()
+                    .name(faker.name().firstName())
+                    .username(faker.name().username())
+                    .email(faker.internet().emailAddress())
+                    .password("Password123!")
+                    .role(RoleUserEnum.CUSTOMER)
+                    .status(StatusUserEnum.NEW_USER)
+                    .build();
 
-        User user2 = User.builder()
-                .name(faker.name().firstName())
-                .username(faker.name().username())
-                .email(faker.internet().emailAddress())
-                .password("Password123!")
-                .role(RoleUserEnum.CUSTOMER)
-                .status(StatusUserEnum.NEW_USER)
-                .build();
+            User user2 = User.builder()
+                    .name(faker.name().firstName())
+                    .username(faker.name().username())
+                    .email(faker.internet().emailAddress())
+                    .password("Password123!")
+                    .role(RoleUserEnum.CUSTOMER)
+                    .status(StatusUserEnum.NEW_USER)
+                    .build();
 
-        user1 = userRepository.save(user1);
-        user2 = userRepository.save(user2);
+            user1 = userRepository.save(user1);
+            user2 = userRepository.save(user2);
 
-        // ارتباط بین User و SubDuty
-        user1.addSubDuty(subDuty1);
-        user2.addSubDuty(subDuty2);
+            // ارتباط بین User و SubDuty
+            user1.addSubDuty(subDuty1);
+            user2.addSubDuty(subDuty2);
 
-        userRepository.saveAll(Arrays.asList(user1, user2));
+            userRepository.saveAll(Arrays.asList(user1, user2));
 
-        // ایجاد Order با داده‌های تصادفی
-        Order order1 = Order.builder()
-                .description(faker.lorem().paragraph())
-                .suggestionPrice(faker.number().randomDouble(2,210,400))
-                .status(StatusOrderEnum.WAITING)
-                .date(LocalDate.now().plusDays(2))
-                .time(LocalTime.of(10, 0))
-                .user(user1)
-                .subDuty(subDuty1)
-                .build();
-        Order order2 = Order.builder()
-                .description(faker.lorem().paragraph())
-                .suggestionPrice(faker.number().randomDouble(2,210,400))
-                .status(StatusOrderEnum.WAITING)
-                .date(LocalDate.now().plusDays(2))
-                .time(LocalTime.of(10, 0))
-                .user(user1)
-                .subDuty(subDuty1)
-                .build();
+            // ایجاد Order با داده‌های تصادفی
+            Order order1 = Order.builder()
+                    .description(faker.lorem().paragraph())
+                    .suggestionPrice(faker.number().randomDouble(2, 210, 400))
+                    .status(StatusOrderEnum.WAITING)
+                    .date(LocalDate.now().plusDays(2))
+                    .time(LocalTime.of(10, 0))
+                    .user(user1)
+                    .subDuty(subDuty1)
+                    .build();
+            Order order2 = Order.builder()
+                    .description(faker.lorem().paragraph())
+                    .suggestionPrice(faker.number().randomDouble(2, 210, 400))
+                    .status(StatusOrderEnum.WAITING)
+                    .date(LocalDate.now().plusDays(2))
+                    .time(LocalTime.of(10, 0))
+                    .user(user1)
+                    .subDuty(subDuty1)
+                    .build();
 
-        order1 = orderRepository.save(order1);
-        order2 = orderRepository.save(order2);
+            order1 = orderRepository.save(order1);
+            order2 = orderRepository.save(order2);
 
-        // ایجاد Suggestion با داده‌های تصادفی
-        Suggestion suggestion1 = Suggestion.builder()
-                .suggestionPrice(faker.number().randomDouble(2, 100, 500))
-                .order(order1)
-                .user(user1)
-                .startDate(LocalDate.now().plusDays(2))
-                .startTime(LocalTime.of(11, 0))
-                .durationOfWork(faker.number().numberBetween(1, 5) + " hours")
-                .build();
-        Suggestion suggestion2 = Suggestion.builder()
-                .suggestionPrice(faker.number().randomDouble(2, 100, 500))
-                .order(order1)
-                .user(user2)
-                .startDate(LocalDate.now().plusDays(2))
-                .startTime(LocalTime.of(11, 0))
-                .durationOfWork(faker.number().numberBetween(1, 5) + " hours")
-                .build();
+            // ایجاد Suggestion با داده‌های تصادفی
+            Suggestion suggestion1 = Suggestion.builder()
+                    .suggestionPrice(faker.number().randomDouble(2, 100, 500))
+                    .order(order1)
+                    .user(user1)
+                    .startDate(LocalDate.now().plusDays(2))
+                    .startTime(LocalTime.of(11, 0))
+                    .durationOfWork(faker.number().numberBetween(1, 5))
+                    .build();
+            Suggestion suggestion2 = Suggestion.builder()
+                    .suggestionPrice(faker.number().randomDouble(2, 100, 500))
+                    .order(order1)
+                    .user(user2)
+                    .startDate(LocalDate.now().plusDays(2))
+                    .startTime(LocalTime.of(11, 0))
+                    .durationOfWork(faker.number().numberBetween(1, 5))
+                    .build();
 
-        suggestionRepository.save(suggestion1);
+            suggestionRepository.save(suggestion1);
 
-        System.out.println("Test data inserted using Faker.");
+            System.out.println("Test data inserted using Faker.");
+        }
     }
 }
