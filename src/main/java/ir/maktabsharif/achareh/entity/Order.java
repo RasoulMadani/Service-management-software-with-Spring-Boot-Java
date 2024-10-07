@@ -1,7 +1,7 @@
 package ir.maktabsharif.achareh.entity;
 
 
-import ir.maktabsharif.achareh.enums.StatusOrderEnum;
+import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -30,7 +30,7 @@ public class Order extends BaseEntity<Long>{
 
 
     @Enumerated(EnumType.STRING)
-    private StatusOrderEnum status;
+    private OrderStatusEnum status;
 
 
     @ManyToOne

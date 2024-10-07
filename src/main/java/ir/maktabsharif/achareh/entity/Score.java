@@ -1,5 +1,7 @@
 package ir.maktabsharif.achareh.entity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
@@ -15,9 +17,10 @@ import lombok.Setter;
 @Entity
 public class Score extends BaseEntity<Long>{
 
-    @DecimalMin(value = "0.0", message = "Price must be at least 0.0")
-    @DecimalMax(value = "5.0", message = "Price must be less than or equal to 5.0")
     private Double range;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
 }

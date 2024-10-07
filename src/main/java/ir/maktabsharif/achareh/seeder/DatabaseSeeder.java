@@ -3,7 +3,7 @@ package ir.maktabsharif.achareh.seeder;
 import com.github.javafaker.Faker;
 import ir.maktabsharif.achareh.entity.*;
 import ir.maktabsharif.achareh.enums.RoleUserEnum;
-import ir.maktabsharif.achareh.enums.StatusOrderEnum;
+import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -84,7 +84,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             Order order1 = Order.builder()
                     .description(faker.lorem().paragraph())
                     .suggestionPrice(faker.number().randomDouble(2, 210, 400))
-                    .status(StatusOrderEnum.WAITING)
+                    .status(OrderStatusEnum.WAITING)
                     .date(LocalDate.now().plusDays(2))
                     .time(LocalTime.of(10, 0))
                     .user(user1)
@@ -93,7 +93,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             Order order2 = Order.builder()
                     .description(faker.lorem().paragraph())
                     .suggestionPrice(faker.number().randomDouble(2, 210, 400))
-                    .status(StatusOrderEnum.WAITING)
+                    .status(OrderStatusEnum.WAITING)
                     .date(LocalDate.now().plusDays(2))
                     .time(LocalTime.of(10, 0))
                     .user(user1)

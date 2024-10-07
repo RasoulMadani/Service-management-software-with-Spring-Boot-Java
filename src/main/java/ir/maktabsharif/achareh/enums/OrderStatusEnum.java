@@ -1,6 +1,6 @@
 package ir.maktabsharif.achareh.enums;
 
-public enum StatusOrderEnum {
+public enum OrderStatusEnum {
     WAITING,
     SELECT,
     COMING,

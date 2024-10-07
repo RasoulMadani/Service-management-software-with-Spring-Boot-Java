@@ -70,7 +70,8 @@ public class User extends BaseEntity<Long> {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Score score;
 
     @OneToMany(targetEntity = Order.class , mappedBy="user")
     @Builder.Default

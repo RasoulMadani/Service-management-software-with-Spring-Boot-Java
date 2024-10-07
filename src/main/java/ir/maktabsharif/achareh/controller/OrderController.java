@@ -17,6 +17,7 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
     @PostMapping
+    @Operation(summary = "save order")
     public ResponseEntity<OrderResponseDto> save(@Valid @RequestBody OrderRequestDto orderRequestDto) {
 
         return ResponseEntity.ok(orderService.save(orderRequestDto));

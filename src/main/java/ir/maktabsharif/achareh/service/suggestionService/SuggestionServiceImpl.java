@@ -1,23 +1,18 @@
 package ir.maktabsharif.achareh.service.suggestionService;
 
-import ir.maktabsharif.achareh.dto.order.OrderResponseDto;
-import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
 import ir.maktabsharif.achareh.dto.suggesion.SuggestionRequestDto;
 import ir.maktabsharif.achareh.dto.suggesion.SuggestionResponseDto;
 import ir.maktabsharif.achareh.entity.*;
-import ir.maktabsharif.achareh.enums.StatusOrderEnum;
+import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.OrderJpaRepository;
 import ir.maktabsharif.achareh.repository.SuggestionJpaRepository;
 import ir.maktabsharif.achareh.repository.UserJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.digester.Rule;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +45,7 @@ public class SuggestionServiceImpl implements SuggestionService {
                 .user(findUser)
                 .build();
         Suggestion savedSuggestion = suggestionJpaRepository.save(suggestion);
-        order.setStatus(StatusOrderEnum.SELECT);
+        order.setStatus(OrderStatusEnum.SELECT);
         orderJpaRepository.save(order);
 
         return new SuggestionResponseDto(
@@ -86,7 +81,7 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         Order  order = suggestion.getOrder();
         order.setSuggestion(suggestion);
-        order.setStatus(StatusOrderEnum.COMING);
+        order.setStatus(OrderStatusEnum.COMING);
         orderJpaRepository.save(order);
     }
 
