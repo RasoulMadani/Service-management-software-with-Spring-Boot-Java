@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap with Thymeleaf</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    >
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center mb-4">Payment Information</h2>
+
+            <!-- فرم پرداخت -->
+            <form action="/payment/process-payment" method="post" th:object="${paymentInfo}">
+                <!-- نام صاحب کارت -->
+                <div class="mb-3">
+                    <label for="cardholderName" class="form-label">Cardholder Name</label>
+                    <input type="text" class="form-control" id="cardholderName" name="cardholderName"
+                           placeholder="Enter cardholder's name" th:field="*{cardholderName}" required>
+                </div>
+
+                <!-- شماره کارت -->
+                <div class="mb-3">
+                    <label for="cardNumber" class="form-label">Card Number</label>
+                    <input type="text" class="form-control" id="cardNumber" name="cardNumber"
+                           placeholder="XXXX-XXXX-XXXX-XXXX" th:field="*{cardNumber}" required>
+                </div>
+
+                <!-- تاریخ انقضا -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="expiryMonth" class="form-label">Expiry Month</label>
+                        <input type="number" class="form-control" id="expiryMonth" name="expiryMonth" placeholder="MM"
+                               th:field="*{expiryMonth}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="expiryYear" class="form-label">Expiry Year</label>
+                        <input type="number" class="form-control" id="expiryYear" name="expiryYear" placeholder="YYYY"
+                               th:field="*{expiryYear}" required>
+                    </div>
+                </div>
+
+                <!-- CVV -->
+                <div class="mb-3">
+                    <label for="cvv" class="form-label">CVV</label>
+                    <input type="number" class="form-control" id="cvv" name="cvv" placeholder="CVV" th:field="*{cvv}"
+                           required>
+                </div>
+
+                <!-- مبلغ پرداخت -->
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Amount</label>
+                    <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount"
+                           th:field="*{amount}" required>
+                </div>
+
+
+                <!-- اضافه کردن reCAPTCHA -->
+
+                <div class="mb-3">
+                    <div id="arcaptcha" class="arcaptcha" data-site-key="gezw7xakrt"></div>
+                </div>
+
+                <!-- دکمه پرداخت -->
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-block">Pay Now</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+
+></script>
+
+<!-- Google reCAPTCHA JS -->
+
+<script src="https://widget.arcaptcha.ir/1/api.js" async defer></script>
+
+</body>
+</html>
