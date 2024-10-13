@@ -8,7 +8,7 @@ import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.OrderJpaRepository;
 import ir.maktabsharif.achareh.repository.ScoreRepository;
 import ir.maktabsharif.achareh.repository.SubDutyJpaRepository;
-import ir.maktabsharif.achareh.repository.UserJpaRepository;
+import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

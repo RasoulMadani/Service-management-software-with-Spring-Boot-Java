@@ -1,7 +1,5 @@
 package ir.maktabsharif.achareh.service.subDutyService;
 
-import ir.maktabsharif.achareh.dto.duty.DutyRequestDto;
-import ir.maktabsharif.achareh.dto.duty.DutyResponseDto;
 import ir.maktabsharif.achareh.dto.subDuty.SubDutyRequestDto;
 import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
 import ir.maktabsharif.achareh.entity.Duty;
@@ -11,12 +9,11 @@ import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.DutyJpaRepository;
 import ir.maktabsharif.achareh.repository.SubDutyJpaRepository;
-import ir.maktabsharif.achareh.repository.UserJpaRepository;
+import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

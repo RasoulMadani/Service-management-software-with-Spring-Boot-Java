@@ -6,6 +6,7 @@ import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.repository.*;
+import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

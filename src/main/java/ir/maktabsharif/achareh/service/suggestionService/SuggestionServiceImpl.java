@@ -7,7 +7,7 @@ import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.OrderJpaRepository;
 import ir.maktabsharif.achareh.repository.SuggestionJpaRepository;
-import ir.maktabsharif.achareh.repository.UserJpaRepository;
+import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -56,8 +56,9 @@ public class User extends BaseEntity<Long> {
     @Enumerated(EnumType.STRING)
     private StatusUserEnum status = StatusUserEnum.NEW_USER;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
+
             name = "sub_duty_users", // نام جدول واسط
             joinColumns = @JoinColumn(name = "user_id"), // کلید مربوط به user
             inverseJoinColumns = @JoinColumn(name = "sub_duty_id") // کلید مربوط به sub_duty
@@ -66,14 +67,14 @@ public class User extends BaseEntity<Long> {
     private List<SubDuty> sub_duties = new ArrayList<>();
 
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "user", cascade = CascadeType.ALL)
     private Score score;
 
-    @OneToMany(targetEntity = Order.class , mappedBy="user")
+    @OneToMany(fetch = FetchType.LAZY,targetEntity = Order.class , mappedBy="user")
     @Builder.Default
     private List<Order> orders = new ArrayList<>();
 

@@ -1,26 +1,27 @@
 package ir.maktabsharif.achareh.service.UserService;
 
 
-import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
+import ir.maktabsharif.achareh.dto.user.UserDTO;
 import ir.maktabsharif.achareh.dto.user.UserRequestDto;
 import ir.maktabsharif.achareh.dto.user.UserResponseDto;
-import ir.maktabsharif.achareh.entity.Duty;
-import ir.maktabsharif.achareh.entity.SubDuty;
 import ir.maktabsharif.achareh.entity.User;
 import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
-import ir.maktabsharif.achareh.repository.UserJpaRepository;
+import ir.maktabsharif.achareh.repository.userRepository.UserCriteriaRepository;
+import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
+import ir.maktabsharif.achareh.utils.UserSpecification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserJpaRepository userRepository;
+    private final UserCriteriaRepository userCriteriaRepository;
 
-    public UserServiceImpl(UserJpaRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
 
     @Override
@@ -57,5 +58,11 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         return new UserResponseDto(user.getId(), user.getName(), user.getUsername(), user.getEmail(), user.getRole(),user.getStatus());
 
+    }
+    public List<User> searchUsers(String name, StatusUserEnum status, String email) {
+        return userRepository.findAll(UserSpecification.getSpecifications(name, status, email));
+    }
+    public List<UserDTO> searchUsers1(String name, String username, String city) {
+        return userCriteriaRepository.findUsersWithCriteria(name, username, city);
     }
 }

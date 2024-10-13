@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class Financial extends BaseEntity<Long>{
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
