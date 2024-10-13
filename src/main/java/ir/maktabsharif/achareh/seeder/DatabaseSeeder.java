@@ -23,6 +23,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final SubDutyJpaRepository subDutyRepository;
     private final OrderJpaRepository orderRepository;
     private final SuggestionJpaRepository suggestionRepository;
+    private final FinancialJpaRepository financialJpaRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -80,6 +81,10 @@ public class DatabaseSeeder implements CommandLineRunner {
 
             userRepository.saveAll(Arrays.asList(user1, user2));
 
+
+            Financial financial = new Financial(user1,1000.0);
+            Financial financial1 = new Financial(user2,2000.0);
+            financialJpaRepository.saveAll(Arrays.asList(financial1, financial));
             // ایجاد Order با داده‌های تصادفی
             Order order1 = Order.builder()
                     .description(faker.lorem().paragraph())

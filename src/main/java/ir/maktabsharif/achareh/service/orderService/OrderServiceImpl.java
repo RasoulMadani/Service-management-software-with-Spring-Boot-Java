@@ -36,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (subDuy.getBase_price() > orderRequestDto.suggestionPrice())
             throw new RuleException("suggestion_price.smaller.than.base_price");
+
         Address address = new Address(orderRequestDto.province(), orderRequestDto.city(), orderRequestDto.street(), orderRequestDto.addressDetails());
 
         Order order1 = Order.builder().address(address).suggestionPrice(orderRequestDto.suggestionPrice()).date(orderRequestDto.date()).time(orderRequestDto.time()).status(OrderStatusEnum.WAITING).subDuty(subDuy).user(findUser).description(orderRequestDto.description()).build();

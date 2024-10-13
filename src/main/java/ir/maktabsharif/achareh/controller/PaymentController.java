@@ -1,56 +1,67 @@
 package ir.maktabsharif.achareh.controller;
 
-import ir.maktabsharif.achareh.dto.order.OrderResponseDto;
-import ir.maktabsharif.achareh.dto.payment.PaymentInfo;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import ir.maktabsharif.achareh.dto.payment.PaymentInfoDto;
+import ir.maktabsharif.achareh.service.orderService.OrderService;
+import ir.maktabsharif.achareh.service.paymentService.PaymentService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/payment")
 public class PaymentController {
+    private final PaymentService paymentService;
+    private final OrderService orderService;
 
-    @Value("${arcaptcha.secret}")
-    private String arcaptchaSecret;
-
-    @Value("${arcaptcha.site}")
-    private String arcaptchaSite;
     @GetMapping
     public String showPaymentPage(Model model) {
-        model.addAttribute("paymentInfo",new PaymentInfo());
+        model.addAttribute("paymentInfo",new PaymentInfoDto());
        return "payment";
     }
 
-    @PostMapping("/process-payment")
-    public String processPayment(@ModelAttribute PaymentInfo paymentInfo, Model model,String arcaptchaToken) {
+    @GetMapping("/order/{orderId}")
+    public String showOrderDetailsPage(@PathVariable Long orderId,Model model) {
+        paymentService.showOrderDetails(orderId,model);
 
-        if (!validateArcaptcha(arcaptchaToken)) {
-            model.addAttribute("error", "Invalid Arcaptcha. Please try again.");
-            return "payment";  // اگر نامعتبر است، بازگشت به فرم پرداخت
+        return "order-details";
+    }
+    @GetMapping("/method")
+    public String showPaymentMethodPage(Model model) {
+        model.addAttribute("paymentInfo",new PaymentInfoDto());
+        return "payment-method";
+    }
+    @PostMapping("/paymentMethodSelectedDetails")
+    public String paymentMethod(
+            @RequestParam("paymentMethod") String paymentMethod,
+            @RequestParam("order_id") Long orderId,
+            Model model
+    ) {
+        if ("credit".equals(paymentMethod)) {
+            System.out.println(orderId);
+            paymentService.getFinacialUserAndSuggestionPrice(orderId,model);
+            model.addAttribute("message", "پرداخت اعتباری انتخاب شد.");
+
+            return "credit-payment";
+        } else if ("online".equals(paymentMethod)) {
+
+            model.addAttribute("message", "پرداخت آنلاین انتخاب شد.");
+
         }
-        // انجام عملیات پرداخت (پردازش داده‌های فرم)
-        // مثلا ارسال به سرویس پرداخت یا ذخیره در دیتابیس
-        System.out.println(paymentInfo);
-        model.addAttribute("message", "Payment processed successfully!");
-        return "payment-confirmation";  // نمایش صفحه تایید پرداخت
-    }
-    private boolean validateArcaptcha(String arcaptchaToken) {
-        String arcaptchaVerifyUrl = "https://api.arcaptcha.com/verify";
-        RestTemplate restTemplate = new RestTemplate();
 
-        Map<String, String> body = new HashMap<>();
-        body.put("secret_key", arcaptchaSecret);
-        body.put("site_key", arcaptchaSite);
-        body.put("challenge_id", arcaptchaToken);
-
-        Map<String, Object> response = restTemplate.postForObject(arcaptchaVerifyUrl, body, Map.class);
-        return (Boolean) response.get("success");
+        return null;
     }
+
+    @PostMapping("/process-credit-payment")
+    public void processCreditPayment(@PathVariable Long orderId,Model model) {
+         paymentService.processCreditPayment(orderId,model);
+    }
+
+    @PostMapping("/process-payment")
+    public String processPayment(@Valid @ModelAttribute PaymentInfoDto paymentInfo, Model model, String arcaptchaToken) {
+      return   paymentService.processPayment(paymentInfo,model,arcaptchaToken);
+    }
+
 }
