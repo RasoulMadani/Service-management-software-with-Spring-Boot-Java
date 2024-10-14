@@ -5,6 +5,7 @@ import ir.maktabsharif.achareh.dto.user.UserDTO;
 import ir.maktabsharif.achareh.dto.user.UserRequestDto;
 import ir.maktabsharif.achareh.dto.user.UserResponseDto;
 import ir.maktabsharif.achareh.entity.User;
+import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
@@ -62,7 +63,17 @@ public class UserServiceImpl implements UserService {
     public List<User> searchUsers(String name, StatusUserEnum status, String email) {
         return userRepository.findAll(UserSpecification.getSpecifications(name, status, email));
     }
-    public List<UserDTO> searchUsers1(String name, String username, String city) {
-        return userCriteriaRepository.findUsersWithCriteria(name, username, city);
+    public List<UserDTO> searchUsers1(String name, String username, String email, StatusUserEnum statusUser,String subDutyName,String dutyName,
+    boolean orderByScore
+    ) {
+        return userCriteriaRepository.findUsersWithCriteria(
+                name,
+                username,
+                email,
+                statusUser,
+                subDutyName,
+                dutyName,
+                orderByScore
+        );
     }
 }
