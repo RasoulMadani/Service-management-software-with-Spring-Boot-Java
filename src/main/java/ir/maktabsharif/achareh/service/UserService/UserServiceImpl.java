@@ -63,14 +63,16 @@ public class UserServiceImpl implements UserService {
     public List<User> searchUsers(String name, StatusUserEnum status, String email) {
         return userRepository.findAll(UserSpecification.getSpecifications(name, status, email));
     }
-    public List<UserDTO> searchUsers1(String name, String username, String email, StatusUserEnum statusUser,String subDutyName,String dutyName,
+    public List<UserDTO> searchUsers1(String name, String username, String email, StatusUserEnum statusUser,RoleUserEnum role,String subDutyName,String dutyName,
     boolean orderByScore
+
     ) {
         return userCriteriaRepository.findUsersWithCriteria(
                 name,
                 username,
                 email,
                 statusUser,
+                role,
                 subDutyName,
                 dutyName,
                 orderByScore

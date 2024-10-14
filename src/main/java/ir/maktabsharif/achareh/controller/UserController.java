@@ -6,6 +6,7 @@ import ir.maktabsharif.achareh.dto.user.UserRequestDto;
 import ir.maktabsharif.achareh.dto.user.UserResponseDto;
 import ir.maktabsharif.achareh.entity.User;
 import ir.maktabsharif.achareh.enums.OrderStatusEnum;
+import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.service.UserService.UserService;
 import jakarta.validation.Valid;
@@ -42,6 +43,7 @@ public class UserController {
             @RequestParam(required = false) String username,
             @Valid @RequestParam(required = false) @Email(message = "{invalid.email.format}") String email,
             @RequestParam(required = false) StatusUserEnum statusUser,
+            @RequestParam(required = false) RoleUserEnum role,
             @RequestParam(required = false) String subDutyName,
             @RequestParam(required = false) String dutyName,
             @Parameter(description = "true for Asc , false for Desc", required = false)
@@ -53,6 +55,7 @@ public class UserController {
                 username,
                 email,
                 statusUser,
+                 role,
                 subDutyName,
                 dutyName,
                 orderByScore

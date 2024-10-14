@@ -6,6 +6,7 @@ import ir.maktabsharif.achareh.entity.Score;
 import ir.maktabsharif.achareh.entity.SubDuty;
 import ir.maktabsharif.achareh.entity.User;
 import ir.maktabsharif.achareh.enums.OrderStatusEnum;
+import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ public class UserCriteriaRepository {
                                                String username,
                                                String email,
                                                StatusUserEnum status,
+                                               RoleUserEnum role,
                                                String subDutyName,
                                                String dutyName,
                                                boolean orderByScore
@@ -71,6 +73,10 @@ public class UserCriteriaRepository {
         }
         if (status != null) {
             predicates.add(criteriaBuilder.equal(root.get("status"), status));
+        }
+
+        if (role != null) {
+            predicates.add(criteriaBuilder.equal(root.get("role"), role));
         }
 
 
