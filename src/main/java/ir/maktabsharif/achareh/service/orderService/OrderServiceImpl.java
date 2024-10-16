@@ -1,16 +1,20 @@
 package ir.maktabsharif.achareh.service.orderService;
 
+import ir.maktabsharif.achareh.dto.order.OrderCommentRequestDto;
+import ir.maktabsharif.achareh.dto.order.OrderCommentResponseDTO;
 import ir.maktabsharif.achareh.dto.order.OrderRequestDto;
 import ir.maktabsharif.achareh.dto.order.OrderResponseDto;
 import ir.maktabsharif.achareh.entity.*;
 import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
+import ir.maktabsharif.achareh.repository.OrderCommentJpaRepository;
 import ir.maktabsharif.achareh.repository.OrderJpaRepository;
 import ir.maktabsharif.achareh.repository.ScoreRepository;
 import ir.maktabsharif.achareh.repository.SubDutyJpaRepository;
 import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
@@ -25,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final SubDutyJpaRepository subDutyJpaRepository;
     private final UserJpaRepository userJpaRepository;
     private final ScoreRepository scoreRepository;
+    private final OrderCommentJpaRepository orderCommentJpaRepository;
 
     @Override
     @Transactional
@@ -77,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
                 orderJpaRepository.findById(orderId)
                         .orElseThrow(() -> new RuleException("order.not.found"));
 
-        if(isOrderPerformed(order))throw new RuleException("order.before.performed");
+        if (isOrderPerformed(order)) throw new RuleException("order.before.performed");
 
         Optional<Suggestion> suggestionOptional = Optional.ofNullable(order.getSuggestion());
         suggestionOptional.orElseThrow(() -> new RuleException("suggestion.not.accepted.for.this.order"));
@@ -94,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
 
 
         if (differentHorse > 0) {
-            Score score = new Score((- (0.0 + differentHorse)), suggestion.getUser(),order,"time late");
+            Score score = new Score((-(0.0 + differentHorse)), suggestion.getUser(), order, "time late");
             scoreRepository.save(score);
         }
 
@@ -103,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void addScoreToOrder(Long orderId,Double range) {
+    public void addScoreToOrder(Long orderId, Double range) {
         Order order = //ceae24
                 orderJpaRepository.findById(orderId)
                         .orElseThrow(() -> new RuleException("order.not.found"));
@@ -114,14 +119,27 @@ public class OrderServiceImpl implements OrderService {
         Optional<Suggestion> suggestionOptional = Optional.ofNullable(order.getSuggestion());
         suggestionOptional.orElseThrow(() -> new RuleException("suggestion.not.accepted.for.this.order"));
 
-        Score score = new Score(range,suggestionOptional.get().getUser(),order,"performed order");
+        Score score = new Score(range, suggestionOptional.get().getUser(), order, "performed order");
         scoreRepository.save(score);
 
+    }
+
+    @Override
+    public OrderCommentResponseDTO addCommentToOrder(OrderCommentRequestDto orderCommentRequestDto) {
+        boolean order =
+                orderJpaRepository.existsById(orderCommentRequestDto.order_id());
+        if(!order) throw  new RuleException("order.not.found");
+
+        OrderComment orderComment = new OrderComment(orderCommentRequestDto.message(), new Order(orderCommentRequestDto.order_id()));
+        orderComment = orderCommentJpaRepository.save(orderComment);
+
+        return new OrderCommentResponseDTO(orderComment.getMessage(), orderComment.getOrder().getId());
     }
 
     private boolean isOrderPerformed(Order order) {
         return order.getStatus() == OrderStatusEnum.PERFORMED;
     }
+
     private Duration getDuration(Suggestion suggestion) {
         ZonedDateTime dateTimeNow = ZonedDateTime.now();
 

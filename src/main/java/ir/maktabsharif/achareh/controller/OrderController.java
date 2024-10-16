@@ -1,6 +1,8 @@
 package ir.maktabsharif.achareh.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import ir.maktabsharif.achareh.dto.order.OrderCommentRequestDto;
+import ir.maktabsharif.achareh.dto.order.OrderCommentResponseDTO;
 import ir.maktabsharif.achareh.dto.order.OrderRequestDto;
 import ir.maktabsharif.achareh.dto.order.OrderResponseDto;
 import ir.maktabsharif.achareh.service.orderService.OrderService;
@@ -46,6 +48,13 @@ public class OrderController {
 
         orderService.addScoreToOrder(orderId,range);
         return ResponseEntity.ok("score.add.successfully");
+    }
+
+    @PostMapping("/comment")
+    @Operation(summary = "add comment to order")
+    public ResponseEntity<OrderCommentResponseDTO> addCommentToOrder(@Valid @RequestBody OrderCommentRequestDto orderCommentRequestDto) {
+
+        return ResponseEntity.ok(orderService.addCommentToOrder(orderCommentRequestDto));
     }
 
     @PostMapping("/performed/{orderId}")

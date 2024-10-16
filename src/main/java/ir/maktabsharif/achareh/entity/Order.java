@@ -20,6 +20,9 @@ import java.util.List;
 @Table(name = "orders")
 @Builder
 public class Order extends BaseEntity<Long>{
+    public Order(Long aLong) {
+        super.setId(aLong);
+    }
     private Double suggestionPrice;
 
 
@@ -67,5 +70,6 @@ public class Order extends BaseEntity<Long>{
     @OneToMany(targetEntity = Suggestion.class , mappedBy="order")
     @Builder.Default
     private List<Suggestion> suggestions = new ArrayList<>();
+
 
 }
