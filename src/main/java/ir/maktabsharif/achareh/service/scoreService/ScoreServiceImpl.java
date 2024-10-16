@@ -10,7 +10,7 @@ public class ScoreServiceImpl implements ScoreService{
     private final ScoreJpaRepository scoreJpaRepository;
     @Override
     public Long getScore(Long userId) {
-      return   scoreJpaRepository.sumAmountsByUserId(userId);
-
+//      return   scoreJpaRepository.sumAmountsByUserId(userId);
+        return 22L;
     }
 }

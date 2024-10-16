@@ -71,8 +71,8 @@ public class User extends BaseEntity<Long> {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @OneToOne(fetch = FetchType.LAZY,mappedBy = "user", cascade = CascadeType.ALL)
-    private Score score;
+//    @OneToOne(fetch = FetchType.LAZY,mappedBy = "user", cascade = CascadeType.ALL)
+//    private Score score;
 
     @OneToMany(fetch = FetchType.LAZY,targetEntity = Order.class , mappedBy="user")
     @Builder.Default

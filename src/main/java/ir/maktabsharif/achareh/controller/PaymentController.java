@@ -55,8 +55,9 @@ public class PaymentController {
     }
 
     @PostMapping("/process-credit-payment")
-    public void processCreditPayment(@PathVariable Long orderId,Model model) {
+    public String processCreditPayment(@RequestParam("order_id") Long orderId,Model model) {
          paymentService.processCreditPayment(orderId,model);
+         return "payment-confirmation";
     }
 
     @PostMapping("/process-payment")

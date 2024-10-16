@@ -5,10 +5,12 @@ import ir.maktabsharif.achareh.dto.payment.PaymentInfoDto;
 import ir.maktabsharif.achareh.entity.Financial;
 import ir.maktabsharif.achareh.entity.Order;
 import ir.maktabsharif.achareh.entity.User;
+import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.FinancialJpaRepository;
 import ir.maktabsharif.achareh.repository.OrderJpaRepository;
 import ir.maktabsharif.achareh.service.bankService.BankService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,7 @@ public class PaymentServiceImpl implements PaymentService{
         Order order =
                 orderJpaRepository.findById(orderId)
                         .orElseThrow(() -> new RuleException("order.not.found"));
+
         OrderDetailsDto orderDetailsDto = new OrderDetailsDto(
                 order.getId(),
                 order.getDescription(),
@@ -68,23 +71,43 @@ public class PaymentServiceImpl implements PaymentService{
 
         User user = order.getUser();
 
-        Financial financial = financialJpaRepository.findById(user.getId())
+        Financial financial = financialJpaRepository.findByUserId(user.getId())
                             .orElseThrow(() -> new RuleException("financial.not.found"));
+
 
         model.addAttribute("financialUser", financial.getAmount().longValue());
         model.addAttribute("suggestionPrice", order.getSuggestion().getSuggestionPrice().longValue());
+
     }
 
     @Override
-    public void processCreditPayment(Long orderId, Model model) {
+    @Transactional
+    public void   processCreditPayment(Long orderId, Model model) {
         Order order =
                 orderJpaRepository.findById(orderId)
                         .orElseThrow(() -> new RuleException("order.not.found"));
 
+        if(order.getStatus() == OrderStatusEnum.PAYED)throw  new RuleException("order.has.already.ben.payed");
+
         User user = order.getUser();
 
-        Financial financial = financialJpaRepository.findById(user.getId())
-                .orElseThrow(() -> new RuleException("financial.not.found"));
+        Optional<Financial> financialOptional = financialJpaRepository.findByUserId(user.getId());
+        financialOptional.orElseThrow(() -> new RuleException("financial.not.found"));
+
+        Financial financial = financialOptional.get();
+        Double suggestionPrice =  order.getSuggestion().getSuggestionPrice();
+        if(financial.getAmount() < suggestionPrice)
+            throw new RuleException("financial.is.low");
+
+        financial.setAmount(financial.getAmount() - suggestionPrice);
+        financial = financialJpaRepository.save(financial);
+
+        order.setStatus(OrderStatusEnum.PAYED);
+        order = orderJpaRepository.save(order);
+
+        model.addAttribute("financialUser", financial.getAmount().longValue());
+        model.addAttribute("message", "سفارش با موفقیت پرداخت شد !");
+
 
     }
 
