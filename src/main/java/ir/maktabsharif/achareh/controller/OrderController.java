@@ -5,6 +5,8 @@ import ir.maktabsharif.achareh.dto.order.OrderRequestDto;
 import ir.maktabsharif.achareh.dto.order.OrderResponseDto;
 import ir.maktabsharif.achareh.service.orderService.OrderService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.save(orderRequestDto));
     }
     @GetMapping("/{subDutyId}")
+    @Operation(summary = "get orders this exist in subDuty")
     public ResponseEntity<List<OrderResponseDto>> getOrdersBySubDuty(@PathVariable Long subDutyId) {
-       ;
+
         return ResponseEntity.ok( orderService.getOrdersBySubDutyId(subDutyId));
     }
 
@@ -33,6 +36,16 @@ public class OrderController {
     public ResponseEntity<String> changeOrderStatusToStarting(@PathVariable Long orderId) {
           orderService.changeOrderStatusToStarting(orderId);
          return ResponseEntity.ok("change.status.successfully");
+    }
+    @PostMapping("/score/{orderId}/{range}")
+    @Operation(summary = "save score for order")
+    public ResponseEntity<String> addScoreToOrder(@PathVariable Double range, @PathVariable Long orderId) {
+        if (range < 1.0 || range > 5.0) {
+            throw new IllegalArgumentException("range.must.be.between.1.0_and_5.0");
+        }
+
+        orderService.addScoreToOrder(orderId,range);
+        return ResponseEntity.ok("score.add.successfully");
     }
 
     @PostMapping("/performed/{orderId}")

@@ -77,11 +77,12 @@ public class OrderServiceImpl implements OrderService {
                 orderJpaRepository.findById(orderId)
                         .orElseThrow(() -> new RuleException("order.not.found"));
 
-        Suggestion suggestion = order.getSuggestion();
+        if(isOrderPerformed(order))throw new RuleException("order.before.performed");
 
         Optional<Suggestion> suggestionOptional = Optional.ofNullable(order.getSuggestion());
         suggestionOptional.orElseThrow(() -> new RuleException("suggestion.not.accepted.for.this.order"));
 
+        Suggestion suggestion = suggestionOptional.get();
 
         if (suggestion.getStartDate().isAfter(LocalDate.now()))
             throw new RuleException("start.date.is.after.now.date");
@@ -90,24 +91,37 @@ public class OrderServiceImpl implements OrderService {
 
         long hoursOfBetweenStartAndEnd = duration.toHours();
         long differentHorse = hoursOfBetweenStartAndEnd - suggestion.getDurationOfWork();
-        if (differentHorse > 0) {
-            Optional<Score> scoreOptional = Optional.ofNullable(suggestion.getUser().getScore());
-            scoreOptional.ifPresentOrElse(score -> {
-                Double range = suggestion.getUser().getScore().getRange();
-                double newRange = range - differentHorse;
-                score.setRange(newRange);
-                scoreRepository.save(score);
-            }, () -> {
-                Score score = new Score(0.0 - differentHorse, suggestion.getUser());
-                scoreRepository.save(score);
-            });
 
+
+        if (differentHorse > 0) {
+            Score score = new Score((- (0.0 + differentHorse)), suggestion.getUser(),order,"time late");
+            scoreRepository.save(score);
         }
 
         order.setStatus(OrderStatusEnum.PERFORMED);
         orderJpaRepository.save(order);
     }
 
+    @Override
+    public void addScoreToOrder(Long orderId,Double range) {
+        Order order = //ceae24
+                orderJpaRepository.findById(orderId)
+                        .orElseThrow(() -> new RuleException("order.not.found"));
+
+        if (!isOrderPerformed(order)) {
+            throw new RuleException("order.not.performed");
+        }
+        Optional<Suggestion> suggestionOptional = Optional.ofNullable(order.getSuggestion());
+        suggestionOptional.orElseThrow(() -> new RuleException("suggestion.not.accepted.for.this.order"));
+
+        Score score = new Score(range,suggestionOptional.get().getUser(),order,"performed order");
+        scoreRepository.save(score);
+
+    }
+
+    private boolean isOrderPerformed(Order order) {
+        return order.getStatus() == OrderStatusEnum.PERFORMED;
+    }
     private Duration getDuration(Suggestion suggestion) {
         ZonedDateTime dateTimeNow = ZonedDateTime.now();
 

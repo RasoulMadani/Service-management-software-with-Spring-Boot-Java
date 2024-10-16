@@ -25,6 +25,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final OrderJpaRepository orderRepository;
     private final SuggestionJpaRepository suggestionRepository;
     private final FinancialJpaRepository financialJpaRepository;
+    private final AddressJpaRepository addressJpaRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -38,8 +39,8 @@ public class DatabaseSeeder implements CommandLineRunner {
             Faker faker = new Faker();
 
             // ایجاد Duty با داده‌های تصادفی
-            Duty duty1 = dutyRepository.save(new Duty(faker.job().field()));
-            Duty duty2 = dutyRepository.save(new Duty(faker.job().field()));
+            Duty duty1 = dutyRepository.save(new Duty(faker.job().field() ));
+            Duty duty2 = dutyRepository.save(new Duty(faker.job().field() ));
 
             // ایجاد SubDuty با داده‌های تصادفی
             SubDuty subDuty1 = subDutyRepository.save(new SubDuty(
@@ -83,9 +84,15 @@ public class DatabaseSeeder implements CommandLineRunner {
             userRepository.saveAll(Arrays.asList(user1, user2));
 
 
-            Financial financial = new Financial(user1,1000.0);
-            Financial financial1 = new Financial(user2,2000.0);
+            Financial financial = new Financial(user1, 1000.0);
+            Financial financial1 = new Financial(user2, 2000.0);
             financialJpaRepository.saveAll(Arrays.asList(financial1, financial));
+
+            Address address1 = new Address("tehran", "golestan", "shohada", "kjlsdj");
+            Address address2 = new Address("tehran1", "golestan1", "shohada1", "kjlsdj1");
+            address1 = addressJpaRepository.save(address1);
+            address2 = addressJpaRepository.save(address2);
+
             // ایجاد Order با داده‌های تصادفی
             Order order1 = Order.builder()
                     .description(faker.lorem().paragraph())
@@ -95,6 +102,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .time(LocalTime.of(10, 0))
                     .user(user1)
                     .subDuty(subDuty1)
+
                     .build();
             Order order2 = Order.builder()
                     .description(faker.lorem().paragraph())
@@ -104,6 +112,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .time(LocalTime.of(10, 0))
                     .user(user1)
                     .subDuty(subDuty1)
+
                     .build();
 
             order1 = orderRepository.save(order1);

@@ -3,6 +3,7 @@ package ir.maktabsharif.achareh.controller;
 import ir.maktabsharif.achareh.dto.exception.ExceptionResponse;
 import ir.maktabsharif.achareh.exception.RuleException;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -49,4 +50,11 @@ public class ExceptionController {
                         .build()
         ).collect(Collectors.toList());
     }
+
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException ex) {
+//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
+
 }
+

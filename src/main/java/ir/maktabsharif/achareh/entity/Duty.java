@@ -26,7 +26,7 @@ public class Duty extends BaseEntity<Long> {
 
     @NotEmpty(message = "name.cannot.be.empty")
     @NotNull(message = "name.cannot.be.null")
-    @Size(min = 3, max = 15, message = "name.must.be.between.3.and.15.characters")
+    @Size(min = 3, max = 150, message = "name.must.be.between.3.and.15.characters")
     private String name;
 
     @OneToMany(targetEntity = SubDuty.class , mappedBy="duty")

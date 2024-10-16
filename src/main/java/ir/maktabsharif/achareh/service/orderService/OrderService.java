@@ -11,4 +11,6 @@ public interface OrderService {
     List<OrderResponseDto> getOrdersBySubDutyId(Long subDutyId);
     void changeOrderStatusToStarting(Long orderId);
     void changeOrderStatusToPerformed(Long orderId);
+
+    void addScoreToOrder(Long orderId,Double range);
 }
