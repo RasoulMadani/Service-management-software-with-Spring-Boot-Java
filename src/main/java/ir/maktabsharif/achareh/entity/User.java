@@ -11,7 +11,9 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -24,6 +26,7 @@ public class User extends BaseEntity<Long> {
 
     public User() {
     }
+    private boolean enabled = true; // یا false، بر اساس نیاز شما
 
     @NotEmpty(message = "name cannot be empty")
     @NotNull(message = "name cannot be null")
@@ -78,7 +81,13 @@ public class User extends BaseEntity<Long> {
     @Builder.Default
     private List<Order> orders = new ArrayList<>();
 
-
+    @ManyToMany(fetch = FetchType.EAGER) // یا LAZY به دلخواه
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public void addSubDuty(SubDuty subDuty) {
         this.sub_duties.add(subDuty);
