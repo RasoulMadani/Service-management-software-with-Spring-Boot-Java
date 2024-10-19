@@ -20,20 +20,20 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2 class="text-center mb-4">Payment Information</h2>
+            <h2 class="text-center mb-4">اطلاعات پرداخت</h2>
 
             <!-- فرم پرداخت -->
             <form action="/payment/process-payment" method="post" th:object="${paymentInfo}">
                 <!-- نام صاحب کارت -->
                 <div class="mb-3">
-                    <label for="cardholderName" class="form-label">Cardholder Name</label>
+                    <label for="cardholderName" class="form-label">نام کارت</label>
                     <input type="text" class="form-control" id="cardholderName" name="cardholderName"
                            placeholder="Enter cardholder's name" th:field="*{cardholderName}" required>
                 </div>
 
                 <!-- شماره کارت -->
                 <div class="mb-3">
-                    <label for="cardNumber" class="form-label">Card Number</label>
+                    <label for="cardNumber" class="form-label">شماره کارت</label>
                     <input type="text" class="form-control" id="cardNumber" name="cardNumber"
                            placeholder="XXXX-XXXX-XXXX-XXXX" th:field="*{cardNumber}" required>
                 </div>
@@ -41,12 +41,12 @@
                 <!-- تاریخ انقضا -->
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="expiryMonth" class="form-label">Expiry Month</label>
+                        <label for="expiryMonth" class="form-label">ماه انقضا</label>
                         <input type="number" class="form-control" id="expiryMonth" name="expiryMonth" placeholder="MM"
                                th:field="*{expiryMonth}" required>
                     </div>
                     <div class="col-md-6">
-                        <label for="expiryYear" class="form-label">Expiry Year</label>
+                        <label for="expiryYear" class="form-label">سال انقضا</label>
                         <input type="number" class="form-control" id="expiryYear" name="expiryYear" placeholder="YYYY"
                                th:field="*{expiryYear}" required>
                     </div>
@@ -54,14 +54,14 @@
 
                 <!-- CVV -->
                 <div class="mb-3">
-                    <label for="cvv" class="form-label">CVV</label>
+                    <label for="cvv" class="form-label">سی سی وی ۲</label>
                     <input type="number" class="form-control" id="cvv" name="cvv" placeholder="CVV" th:field="*{cvv}"
                            required>
                 </div>
 
                 <!-- مبلغ پرداخت -->
                 <div class="mb-3">
-                    <label for="amount" class="form-label">Amount</label>
+                    <label for="amount" class="form-label">مبلغ</label>
                     <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount"
                            th:field="*{amount}" required>
                 </div>

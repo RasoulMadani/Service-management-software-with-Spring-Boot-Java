@@ -116,6 +116,7 @@ public class DatabaseSeeder implements CommandLineRunner {
                     .build();
 
             order1 = orderRepository.save(order1);
+
             order2 = orderRepository.save(order2);
 
             // ایجاد Suggestion با داده‌های تصادفی

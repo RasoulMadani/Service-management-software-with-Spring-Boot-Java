@@ -46,8 +46,10 @@ public class PaymentController {
 
             return "credit-payment";
         } else if ("online".equals(paymentMethod)) {
+            model.addAttribute("paymentInfo",new PaymentInfoDto());
+            return "online-payment";
 
-            model.addAttribute("message", "پرداخت آنلاین انتخاب شد.");
+//            model.addAttribute("message", "پرداخت آنلاین انتخاب شد.");
 
         }
 

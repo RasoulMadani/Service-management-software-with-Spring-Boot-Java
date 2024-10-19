@@ -42,7 +42,7 @@ public class UserCriteriaRepository {
 
 
         Join<User, SubDuty> subDuties = root.join("sub_duties", JoinType.LEFT);
-        Join<User, Score> userScoreJoin = root.join("score", JoinType.LEFT);
+//        Join<User, Score> userScoreJoin = root.join("score", JoinType.LEFT);
         Join<SubDuty, Duty> duty = subDuties.join("duty", JoinType.LEFT);
 
         // انتخاب فقط فیلدهای خاص و ساخت DTO
@@ -53,8 +53,8 @@ public class UserCriteriaRepository {
                 root.get("status"),
                 root.get("role"),
                 subDuties.get("name"),
-                duty.get("name"),
-                userScoreJoin.get("range")
+                duty.get("name")
+//                userScoreJoin.get("range")
         );
 
         // فیلترهای پویا
@@ -92,11 +92,11 @@ public class UserCriteriaRepository {
         // اضافه کردن شروط به کوئری
         criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
 
-        if(orderByScore){
-            criteriaQuery.orderBy(criteriaBuilder.desc(userScoreJoin.get("range")));
-        }else {
-            criteriaQuery.orderBy(criteriaBuilder.asc(userScoreJoin.get("range")));
-        }
+//        if(orderByScore){
+//            criteriaQuery.orderBy(criteriaBuilder.desc(userScoreJoin.get("range")));
+//        }else {
+//            criteriaQuery.orderBy(criteriaBuilder.asc(userScoreJoin.get("range")));
+//        }
 
 
         // اجرای کوئری و برگرداندن نتیجه
