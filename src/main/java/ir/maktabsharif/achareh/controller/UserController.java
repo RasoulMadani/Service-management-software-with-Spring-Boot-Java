@@ -26,9 +26,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> save(@Valid @RequestBody UserRequestDto userRequestDto) {
-
-        return ResponseEntity.ok(userService.save(userRequestDto));
+    public ResponseEntity<String> save(@Valid @RequestBody UserRequestDto userRequestDto) {
+        userService.save(userRequestDto);
+        return ResponseEntity.ok("user.saved.successfully");
     }
 
     @PatchMapping("/confirmed_user")

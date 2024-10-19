@@ -4,17 +4,21 @@ package ir.maktabsharif.achareh.service.UserService;
 import ir.maktabsharif.achareh.dto.user.UserDTO;
 import ir.maktabsharif.achareh.dto.user.UserRequestDto;
 import ir.maktabsharif.achareh.dto.user.UserResponseDto;
+import ir.maktabsharif.achareh.entity.Role;
 import ir.maktabsharif.achareh.entity.User;
 import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
+import ir.maktabsharif.achareh.repository.RoleJpaRepository;
 import ir.maktabsharif.achareh.repository.userRepository.UserCriteriaRepository;
 import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
 import ir.maktabsharif.achareh.utils.UserSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -22,11 +26,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserJpaRepository userRepository;
     private final UserCriteriaRepository userCriteriaRepository;
-
+    private final PasswordEncoder passwordEncoder;
+    private final RoleJpaRepository roleJpaRepository;
 
 
     @Override
-    public User save(UserRequestDto userRequestDto) {
+    public void save(UserRequestDto userRequestDto) {
 
         Optional<User> byUsername = userRepository.findByUsername(userRequestDto.username());
         if(byUsername.isPresent())throw  new RuleException("username.is.exist");
@@ -34,17 +39,25 @@ public class UserServiceImpl implements UserService {
         Optional<User> byEmail = userRepository.findByEmail(userRequestDto.email());
         if(byEmail.isPresent())throw  new RuleException("email.is.exist");
 
+        String encodedPassword = passwordEncoder.encode(userRequestDto.password());
+
+        Role role = roleJpaRepository.findByName("CUSTOMER")
+                .orElseThrow(() -> new RuntimeException("role.not.found"));
+
         RoleUserEnum roleUserEnum = userRequestDto.role() == RoleUserEnum.CUSTOMER ? RoleUserEnum.CUSTOMER : RoleUserEnum.SPECIALIST;
         User user = User.builder()
                 .name(userRequestDto.name())
                 .email(userRequestDto.email())
                 .username(userRequestDto.username())
-                .password(userRequestDto.password())
+                .password(encodedPassword)
                 .status(StatusUserEnum.NEW_USER)
                 .role(roleUserEnum)
                 .build();
 
-        return userRepository.save(user);
+        user.getRoles().add(role);
+
+        user = userRepository.save(user);
+        System.out.printf(user.toString());
     }
 
     @Override

@@ -20,7 +20,6 @@ public record UserRequestDto(
         @NotEmpty(message = "{email.is.empty}")
         @Email(message = "{email.is.incorrect}")
         String email,
-
         RoleUserEnum role
 ) {
 }
