@@ -4,13 +4,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import ir.maktabsharif.achareh.dto.user.UserDTO;
 import ir.maktabsharif.achareh.dto.user.UserRequestDto;
 import ir.maktabsharif.achareh.dto.user.UserResponseDto;
-import ir.maktabsharif.achareh.entity.User;
-import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.service.UserService.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +17,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+
 
     @PostMapping
     public ResponseEntity<String> save(@Valid @RequestBody UserRequestDto userRequestDto) {
