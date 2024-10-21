@@ -1,9 +1,9 @@
 package ir.maktabsharif.achareh.service.UserService;
 
 
-import ir.maktabsharif.achareh.dto.user.UserDTO;
-import ir.maktabsharif.achareh.dto.user.UserRequestDto;
-import ir.maktabsharif.achareh.dto.user.UserResponseDto;
+import ir.maktabsharif.achareh.config.CustomUserDetails;
+import ir.maktabsharif.achareh.config.JwtService;
+import ir.maktabsharif.achareh.dto.user.*;
 import ir.maktabsharif.achareh.entity.Role;
 import ir.maktabsharif.achareh.entity.User;
 import ir.maktabsharif.achareh.enums.OrderStatusEnum;
@@ -15,6 +15,9 @@ import ir.maktabsharif.achareh.repository.userRepository.UserCriteriaRepository;
 import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
 import ir.maktabsharif.achareh.utils.UserSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +26,12 @@ import java.util.List;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserJpaRepository userRepository;
     private final UserCriteriaRepository userCriteriaRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleJpaRepository roleJpaRepository;
+    private final JwtService jwtService;
 
 
     @Override
@@ -90,5 +94,17 @@ public class UserServiceImpl implements UserService {
                 dutyName,
                 orderByScore
         );
+    }
+    public UserRestLoginResponse login(UserRestLoginRequest userLoginRequest) {
+
+        UserDetails userDetails = loadUserByUsername(userLoginRequest.getUsername());
+
+        String token = jwtService.generateToken(userDetails);
+        return new UserRestLoginResponse(token);
+    }
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("user.not.found"));
+        return new CustomUserDetails(user);
     }
 }
