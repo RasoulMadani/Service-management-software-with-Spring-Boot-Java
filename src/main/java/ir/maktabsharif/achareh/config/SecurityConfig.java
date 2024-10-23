@@ -1,4 +1,5 @@
 package ir.maktabsharif.achareh.config;
+import ir.maktabsharif.achareh.config.jwt.JwtRequestFilter;
 import ir.maktabsharif.achareh.service.UserService.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,27 +16,33 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomUserDetailsService userService;
+    private final JwtRequestFilter jwtRequestFilter;
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        (requests) -> requests.requestMatchers("/public/**").permitAll()  // دسترسی عمومی
-                                .requestMatchers(HttpMethod.POST,"/rest/v1")
-                                .permitAll()
-                        .anyRequest().permitAll()          // سایر درخواست‌ها نیاز به ورود دارند
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/rest/v1/login",
+                                "/register",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html"
+                        ).permitAll()  // این endpoint ها نیاز به احراز هویت ندارند
+                        .anyRequest().authenticated()  // سایر درخواست‌ها نیاز به احراز هویت دارند
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // حالت stateless برای session
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);  // اضافه کردن JWT فیلتر
 
-                .logout(LogoutConfigurer::permitAll);
 
         return http.build();
     }

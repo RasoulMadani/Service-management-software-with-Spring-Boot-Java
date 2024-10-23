@@ -15,5 +15,5 @@ public interface UserService {
     List<User> searchUsers(String name, StatusUserEnum status, String email);
     List<UserDTO> searchUsers1(String name, String username, String email, StatusUserEnum statusEnum ,RoleUserEnum role, String subDutyName, String dutyName
     , boolean orderByScore);
-    UserRestLoginResponse login(UserRestLoginRequest userRestLoginRequest);
+//    UserRestLoginResponse login(UserRestLoginRequest userRestLoginRequest);
 }

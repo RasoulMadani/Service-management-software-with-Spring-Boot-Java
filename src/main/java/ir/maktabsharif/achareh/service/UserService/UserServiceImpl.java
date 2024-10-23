@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
     private final UserJpaRepository userRepository;
     private final UserCriteriaRepository userCriteriaRepository;
     private final PasswordEncoder passwordEncoder;
@@ -95,16 +95,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 orderByScore
         );
     }
-    public UserRestLoginResponse login(UserRestLoginRequest userLoginRequest) {
-
-        UserDetails userDetails = loadUserByUsername(userLoginRequest.getUsername());
-
-        String token = jwtService.generateToken(userDetails);
-        return new UserRestLoginResponse(token);
-    }
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("user.not.found"));
-        return new CustomUserDetails(user);
-    }
+//    public UserRestLoginResponse login(UserRestLoginRequest userLoginRequest) {
+//
+//        UserDetails userDetails = loadUserByUsername(userLoginRequest.getUsername());
+//
+//        String token = jwtService.generateToken(userDetails);
+//        return new UserRestLoginResponse(token);
+//    }
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("user.not.found"));
+//        return new CustomUserDetails(user);
+//    }
 }
