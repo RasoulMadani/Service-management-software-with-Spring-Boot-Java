@@ -36,8 +36,10 @@ public class SecurityConfig {
                                 "/register",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-ui.html"
-                        ).permitAll()  // این endpoint ها نیاز به احراز هویت ندارند
+                                "/swagger-ui.html",
+                                "/error"
+                        ).permitAll()
+                        .requestMatchers("/manager/**").hasRole("ADMIN") // این endpoint ها نیاز به احراز هویت ندارند
                         .anyRequest().authenticated()  // سایر درخواست‌ها نیاز به احراز هویت دارند
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // حالت stateless برای session
