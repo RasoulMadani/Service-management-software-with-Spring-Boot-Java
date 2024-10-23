@@ -53,7 +53,7 @@ public class UserController {
                 username,
                 email,
                 statusUser,
-                 role,
+                role,
                 subDutyName,
                 dutyName,
                 orderByScore

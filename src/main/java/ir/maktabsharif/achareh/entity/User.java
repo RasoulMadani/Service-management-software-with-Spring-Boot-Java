@@ -25,6 +25,10 @@ import java.util.Set;
 public class User extends BaseEntity<Long> {
 
     public User() {
+
+    }
+    public User(Long aLong) {
+        super.setId(aLong);
     }
     private boolean enabled = true; // یا false، بر اساس نیاز شما
 
@@ -43,12 +47,13 @@ public class User extends BaseEntity<Long> {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotNull(message = "Password cannot be null")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Pattern(
-            regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
-            message = "Password must contain at least one digit, one lowercase letter, one uppercase letter, and one special character"
-    )
+//    @NotNull(message = "Password cannot be null")
+//    @Size(min = 8, message = "Password must be at least 8 characters long")
+//    @Pattern(
+//            regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
+//            message = "Password must contain at least one digit, one lowercase letter, one uppercase letter, and one special character"
+//    )
+
     private String password;
 
     private String image;
@@ -89,6 +94,8 @@ public class User extends BaseEntity<Long> {
     )
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
+
+
 
     public void addSubDuty(SubDuty subDuty) {
         this.sub_duties.add(subDuty);
