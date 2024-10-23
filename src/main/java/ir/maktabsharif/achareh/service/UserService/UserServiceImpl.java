@@ -2,7 +2,7 @@ package ir.maktabsharif.achareh.service.UserService;
 
 
 import ir.maktabsharif.achareh.config.CustomUserDetails;
-import ir.maktabsharif.achareh.config.JwtService;
+
 import ir.maktabsharif.achareh.dto.user.*;
 import ir.maktabsharif.achareh.entity.Role;
 import ir.maktabsharif.achareh.entity.User;
@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
     private final UserCriteriaRepository userCriteriaRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleJpaRepository roleJpaRepository;
-    private final JwtService jwtService;
 
 
     @Override

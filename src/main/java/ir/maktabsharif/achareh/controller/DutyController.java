@@ -10,6 +10,7 @@ import ir.maktabsharif.achareh.service.dutyService.DutyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class DutyController {
     private final DutyService dutyService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DutyResponseDto> save(@Valid @RequestBody DutyRequestDto dutyRequestDto) {
 
         return ResponseEntity.ok(dutyService.save(dutyRequestDto));
