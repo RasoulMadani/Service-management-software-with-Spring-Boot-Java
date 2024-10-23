@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/manager/report/user")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAuthority('READ')")
 public class ManagerReportUserController {
     private  final ReportUserService managerReportUserService;
     @GetMapping

@@ -1,38 +1,41 @@
-package ir.maktabsharif.achareh.config;
+package ir.maktabsharif.achareh.service.UserService;
 
+import ir.maktabsharif.achareh.entity.Role;
 import ir.maktabsharif.achareh.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private User user;
+    private final String username;
+    private final String password;
+    private final Set<Role> roles;
 
-    public CustomUserDetails(User user) {
-        this.user = user;
-    }
+
+    // سازنده و سایر متدها
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+        // تبدیل نقش‌ها و مجوزها به GrantedAuthorities
+        return roles.stream()
+                .flatMap(role -> role.getAuthorities().stream())
+                .map(authority -> new SimpleGrantedAuthority(authority.getName()))
+                .collect(Collectors.toSet());
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return username;
     }
 
     @Override
@@ -52,6 +55,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isEnabled();
+        return true;
     }
 }

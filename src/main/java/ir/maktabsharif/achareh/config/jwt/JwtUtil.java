@@ -55,13 +55,13 @@ public class JwtUtil {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
 
-        // اضافه کردن پیشوند "ROLE_" به همه نقش‌ها
-        List<String> roles = userDetails.getAuthorities()
+        // اضافه کردن Authorities (مجوزها) به claims
+        List<String> authorities = userDetails.getAuthorities()
                 .stream()
-                .map(grantedAuthority -> "ROLE_" + grantedAuthority.getAuthority())  // اضافه کردن پیشوند "ROLE_"
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        claims.put("roles", roles);  // اضافه کردن نقش‌ها به claims
+        claims.put("authorities", authorities);  // اضافه کردن مجوزها به claims
 
         return createToken(claims, userDetails.getUsername());
     }

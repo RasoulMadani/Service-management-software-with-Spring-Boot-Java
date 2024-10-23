@@ -1,12 +1,9 @@
 package ir.maktabsharif.achareh.service.UserService;
 
 
-import ir.maktabsharif.achareh.config.CustomUserDetails;
-
 import ir.maktabsharif.achareh.dto.user.*;
 import ir.maktabsharif.achareh.entity.Role;
 import ir.maktabsharif.achareh.entity.User;
-import ir.maktabsharif.achareh.enums.OrderStatusEnum;
 import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
@@ -15,13 +12,9 @@ import ir.maktabsharif.achareh.repository.userRepository.UserCriteriaRepository;
 import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
 import ir.maktabsharif.achareh.utils.UserSpecification;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 @Service

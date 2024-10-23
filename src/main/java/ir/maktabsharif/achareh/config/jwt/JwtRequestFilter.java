@@ -45,13 +45,20 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             if (jwtUtil.validateToken(jwt, userDetails)) {
                 Claims claims = jwtUtil.extractAllClaims(jwt);
-                List<String> roles = claims.get("roles", List.class);  // استخراج نقش‌ها از JWT
-                System.out.println(roles);
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                // استخراج Authorities از JWT
+                List<String> authorities = claims.get("authorities", List.class);
+
+                // تبدیل Authorities به SimpleGrantedAuthority
+                List<SimpleGrantedAuthority> grantedAuthorities = authorities.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, grantedAuthorities);
+
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
         chain.doFilter(request, response);
