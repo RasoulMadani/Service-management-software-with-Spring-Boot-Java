@@ -37,7 +37,24 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
-            username = jwtUtil.extractUsername(jwt);
+            try {
+                username = jwtUtil.extractUsername(jwt);
+            } catch (io.jsonwebtoken.security.SignatureException ex) {
+                handleException(response, "امضای توکن معتبر نیست.", HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            } catch (io.jsonwebtoken.ExpiredJwtException ex) {
+                handleException(response, "توکن منقضی شده است.", HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            } catch (Exception ex) {
+                handleException(response, "خطای احراز هویت رخ داده است.", HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+        }
+
+        // بررسی اینکه اگر نام کاربری null باشد، خطای ۴۰۳ بازگردانده شود
+        if (username == null || SecurityContextHolder.getContext().getAuthentication() == null) {
+            handleException(response, "دسترسی شما به این منبع مجاز نیست.", HttpServletResponse.SC_FORBIDDEN);
+            return;
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -62,5 +79,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private void handleException(HttpServletResponse response, String message, int statusCode) throws IOException {
+        response.setStatus(statusCode);
+        response.setContentType("application/json; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8"); // تنظیم encoding
+        response.getWriter().write("{\"error\": \"" + message + "\"}");
     }
 }
