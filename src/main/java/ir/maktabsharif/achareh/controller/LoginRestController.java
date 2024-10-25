@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/rest/v1")
+@RequestMapping("/public/rest/v1")
 @RequiredArgsConstructor
 public class LoginRestController {
     private final UserService userService;

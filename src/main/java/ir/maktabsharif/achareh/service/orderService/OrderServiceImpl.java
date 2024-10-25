@@ -34,9 +34,11 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDto save(OrderRequestDto orderRequestDto) {
 
-        User findUser = userJpaRepository.findById(orderRequestDto.user_id()).orElseThrow(() -> new RuleException("user.not.found"));
+        User findUser = userJpaRepository
+                .findById(orderRequestDto.user_id()).orElseThrow(() -> new RuleException("user.not.found"));
 
-        SubDuty subDuy = subDutyJpaRepository.findById(orderRequestDto.sub_duty_id()).orElseThrow(() -> new RuleException("sub_duty.not.found"));
+        SubDuty subDuy = subDutyJpaRepository
+                .findById(orderRequestDto.sub_duty_id()).orElseThrow(() -> new RuleException("sub_duty.not.found"));
 
         if (subDuy.getBase_price() > orderRequestDto.suggestionPrice())
             throw new RuleException("suggestion_price.smaller.than.base_price");

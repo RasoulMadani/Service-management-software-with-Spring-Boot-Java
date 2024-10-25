@@ -7,6 +7,7 @@ import ir.maktabsharif.achareh.entity.Duty;
 import ir.maktabsharif.achareh.entity.SubDuty;
 import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.DutyJpaRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class DutyServiceImpl implements DutyService {
     private final DutyJpaRepository dutyJpaRepository;
 
     @Override
+    @Transactional
     public DutyResponseDto save(DutyRequestDto dutyRequestDto) {
         Optional<Duty> findByName = dutyJpaRepository.findByName(dutyRequestDto.name());
         if (findByName.isPresent()) throw new RuleException("name.is.exist");
@@ -35,6 +37,7 @@ public class DutyServiceImpl implements DutyService {
     public List<SubDutyResponseDto> getSubDuties(Long id) {
         Duty duty = dutyJpaRepository.findById(id)
                 .orElseThrow(() -> new RuleException("duty.not.found"));
+
         return this.getAllSubDutiesDto(duty.getSubDuties(), id);
 
     }
