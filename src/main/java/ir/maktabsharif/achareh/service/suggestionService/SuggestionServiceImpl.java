@@ -8,8 +8,10 @@ import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.OrderJpaRepository;
 import ir.maktabsharif.achareh.repository.SuggestionJpaRepository;
 import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
+import ir.maktabsharif.achareh.service.UserService.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +27,10 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Override
     @Transactional
     public SuggestionResponseDto save(SuggestionRequestDto suggestionRequestDto) {
-        User findUser =
-                userJpaRepository.findById(suggestionRequestDto.user_id())
-                        .orElseThrow(() -> new RuleException("user.not.found"));
+        CustomUserDetails customUserDetails =
+                (CustomUserDetails)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User findUser = customUserDetails.getUser();
 
         Order order =
                 orderJpaRepository.findById(suggestionRequestDto.order_id())
@@ -73,9 +76,10 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Override
     public List<SuggestionResponseDto> getAllByOrderId(Long orderId) {
 
-        Order order =
-                orderJpaRepository.findById(orderId)
-                        .orElseThrow(() -> new RuleException("order.not.found"));
+        boolean order =
+                orderJpaRepository.existsById(orderId);
+
+        if(!order)throw  new RuleException("order.not.found");
 
         List<Suggestion> suggestions = suggestionJpaRepository.findAllByOrderIdOrderBySuggestionPriceAsc(orderId);
 

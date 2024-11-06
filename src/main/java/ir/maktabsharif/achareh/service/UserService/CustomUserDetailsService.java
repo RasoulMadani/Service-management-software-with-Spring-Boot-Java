@@ -20,6 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userJpaRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("user.not.found"));
 
-        return new CustomUserDetails(user.getUsername(),user.getPassword(),user.getRoles());
+        return new CustomUserDetails(user,user.getUsername(),user.getPassword(),user.getRoles());
     }
 }

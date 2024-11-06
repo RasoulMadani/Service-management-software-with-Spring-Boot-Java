@@ -2,6 +2,7 @@ package ir.maktabsharif.achareh.service.UserService;
 
 import ir.maktabsharif.achareh.entity.Role;
 import ir.maktabsharif.achareh.entity.User;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
+    @Getter
+    private final User user;
     private final String username;
     private final String password;
     private final Set<Role> roles;
