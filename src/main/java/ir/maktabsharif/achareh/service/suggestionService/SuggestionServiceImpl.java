@@ -33,8 +33,17 @@ public class SuggestionServiceImpl implements SuggestionService {
                 orderJpaRepository.findById(suggestionRequestDto.order_id())
                         .orElseThrow(() -> new RuleException("order.not.found"));
 
+        boolean suggestionExist =
+                suggestionJpaRepository
+                        .existsByOrderIdAndUserId(order.getId(),findUser.getId());
+
+        if(suggestionExist)throw new RuleException("you.suggested.this.order.before");
+
         if (order.getSubDuty().getBase_price() > suggestionRequestDto.suggestionPrice())
             throw new RuleException("suggestion_price.smaller.than.base_price");
+
+        if (order.getDate().isAfter(suggestionRequestDto.date()))
+            throw new RuleException("suggestion.startDate.must.be.after.order.startDate");
 
         Suggestion suggestion = Suggestion.builder()
                 .suggestionPrice(suggestionRequestDto.suggestionPrice())
@@ -44,6 +53,7 @@ public class SuggestionServiceImpl implements SuggestionService {
                 .order(order)
                 .user(findUser)
                 .build();
+
         Suggestion savedSuggestion = suggestionJpaRepository.save(suggestion);
         order.setStatus(OrderStatusEnum.SELECT);
         orderJpaRepository.save(order);

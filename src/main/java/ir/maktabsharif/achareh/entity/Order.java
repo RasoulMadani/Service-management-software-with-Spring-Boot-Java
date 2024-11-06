@@ -46,7 +46,7 @@ public class Order extends BaseEntity<Long>{
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @FutureOrPresent(message = "Event date must in the future")
+//    @FutureOrPresent(message = "Event date must in the future")
     private LocalDate date;
 
     private LocalTime time;

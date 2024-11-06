@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface SuggestionJpaRepository extends JpaRepository<Suggestion,Long> {
     List<Suggestion> findAllByOrderIdOrderBySuggestionPriceAsc(Long orderId);
+
+    Boolean existsByOrderIdAndUserId(Long orderId,Long userId);
 }
