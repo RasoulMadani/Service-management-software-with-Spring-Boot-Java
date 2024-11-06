@@ -100,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
 
 
         if (differentHorse > 0) {
-            Score score = new Score((-(0.0 + differentHorse)), order, "time late");
+            Score score = new Score((-(0.0 + differentHorse)), suggestion.getUser(),order.getId(), "time late");
             scoreJpaRepository.save(score);
         }
 
@@ -120,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
         Optional<Suggestion> suggestionOptional = Optional.ofNullable(order.getSuggestion());
         suggestionOptional.orElseThrow(() -> new RuleException("suggestion.not.accepted.for.this.order"));
 
-        Score score = new Score(range, order, "performed order");
+        Score score = new Score(range,suggestionOptional.get().getUser(), order.getId(), "performed order");
         scoreJpaRepository.save(score);
 
     }

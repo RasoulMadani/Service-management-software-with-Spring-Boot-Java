@@ -7,10 +7,12 @@ import ir.maktabsharif.achareh.dto.user.UserResponseDto;
 import ir.maktabsharif.achareh.enums.RoleUserEnum;
 import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.service.UserService.UserService;
+import ir.maktabsharif.achareh.utils.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,23 +21,25 @@ import java.util.List;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
-
-
     @PostMapping
-    public ResponseEntity<String> save(@Valid @RequestBody UserRequestDto userRequestDto) {
+    @PreAuthorize("hasAuthority('REGISTER USER')")
+    public ResponseEntity<ApiResponse> save(@Valid @RequestBody UserRequestDto userRequestDto) {
         userService.save(userRequestDto);
-        return ResponseEntity.ok("user.saved.successfully");
+        return ResponseEntity.ok(new ApiResponse("user.saved.successfully",true));
     }
 
     @PatchMapping("/confirmed_user")
+    @PreAuthorize("hasAuthority('CONFIRMED USER')")
     public ResponseEntity<UserResponseDto> confirmedUser(@RequestParam Long id) {
 
         return ResponseEntity.ok(userService.confirmedUser(id));
     }
 
     @GetMapping("/users/search")
+    @PreAuthorize("hasAuthority('SEARCH USER')")
     public List<UserDTO> searchUsers(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String username,

@@ -47,12 +47,12 @@ public class User extends BaseEntity<Long> {
     @Column(unique = true, nullable = false)
     private String email;
 
-//    @NotNull(message = "Password cannot be null")
-//    @Size(min = 8, message = "Password must be at least 8 characters long")
-//    @Pattern(
-//            regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
-//            message = "Password must contain at least one digit, one lowercase letter, one uppercase letter, and one special character"
-//    )
+    @NotNull(message = "Password cannot be null")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Pattern(
+            regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
+            message = "Password must contain at least one digit, one lowercase letter, one uppercase letter, and one special character"
+    )
 
     private String password;
 
@@ -79,8 +79,11 @@ public class User extends BaseEntity<Long> {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-//    @OneToOne(fetch = FetchType.LAZY,mappedBy = "user", cascade = CascadeType.ALL)
-//    private Score score;
+    @OneToMany(fetch = FetchType.LAZY,targetEntity = Score.class,mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Score> score = new ArrayList<>();
+
+
 
     @OneToMany(fetch = FetchType.LAZY,targetEntity = Order.class , mappedBy="user")
     @Builder.Default

@@ -17,13 +17,13 @@ public class Score extends BaseEntity<Long>{
 
     private Double range;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private User user = null;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    private Order order;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user = null;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private Long order_id;
     private String description;
 
 }

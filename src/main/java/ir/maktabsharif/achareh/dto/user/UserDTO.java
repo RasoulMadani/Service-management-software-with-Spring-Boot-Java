@@ -17,5 +17,6 @@ public class UserDTO {
     private RoleUserEnum role;
     private String sub_duty_name;
     private String duty_name;
+    private Double range;
 
 }
