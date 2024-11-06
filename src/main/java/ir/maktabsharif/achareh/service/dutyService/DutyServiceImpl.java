@@ -24,7 +24,7 @@ public class DutyServiceImpl implements DutyService {
     @Transactional
     public DutyResponseDto save(DutyRequestDto dutyRequestDto) {
         Optional<Duty> findByName = dutyJpaRepository.findByName(dutyRequestDto.name());
-        if (findByName.isPresent()) throw new RuleException("name.is.exist");
+        if (findByName.isPresent()) throw new RuleException("name.duty.is.exist");
 
 
         Duty duty = new Duty(dutyRequestDto.name());

@@ -6,10 +6,12 @@ import ir.maktabsharif.achareh.enums.StatusUserEnum;
 import ir.maktabsharif.achareh.exception.RuleException;
 import ir.maktabsharif.achareh.repository.TokenJpaRepository;
 import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
+import ir.maktabsharif.achareh.service.UserService.CustomUserDetails;
 import ir.maktabsharif.achareh.utils.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,10 +23,11 @@ public class TokenServiceImpl implements TokenService{
     private final UserJpaRepository userJpaRepository;
     private final EmailService emailService;
     @Override
-    public String createVerificationToken(Long userId) {
-        User user = userJpaRepository
-                .findById(userId)
-                .orElseThrow(() -> new RuleException("user.not.found"));
+    public Boolean createVerificationToken() {
+        CustomUserDetails customUserDetails =
+                (CustomUserDetails)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = customUserDetails.getUser();
 
         if (user.getStatus() == StatusUserEnum.AWAITING || user.getStatus() == StatusUserEnum.CONFIRMED){
             throw new RuleException("user.activated.before");
@@ -42,12 +45,12 @@ public class TokenServiceImpl implements TokenService{
         } catch (MessagingException e) {
             throw  new RuleException("cannot.send.email");
         }
-        return "activation.link.send.successfully";
+        return true;
     }
 
     @Override
     @Transactional
-    public String activateAccount(String token) {
+    public boolean activateAccount(String token) {
         Token verificationToken = tokenJpaRepository.findByToken(token);
 
         if (verificationToken == null) {
@@ -66,6 +69,6 @@ public class TokenServiceImpl implements TokenService{
         // حذف توکن بعد از فعال‌سازی
         tokenJpaRepository.delete(verificationToken);
 
-        return "account.activated.successfully";
+        return true;
     }
 }

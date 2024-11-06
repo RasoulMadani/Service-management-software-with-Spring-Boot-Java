@@ -1,7 +1,7 @@
 package ir.maktabsharif.achareh.service.tokenService;
 
 public interface TokenService {
-    String  createVerificationToken(Long userId);
+    Boolean  createVerificationToken();
 
-    String activateAccount(String token);
+    boolean activateAccount(String token);
 }
