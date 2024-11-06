@@ -29,8 +29,8 @@ public class DutyServiceImpl implements DutyService {
 
         Duty duty = new Duty(dutyRequestDto.name());
 
-        Duty duty1 = dutyJpaRepository.save(duty);
-        return new DutyResponseDto(duty1.getId(),duty1.getName());
+        duty = dutyJpaRepository.save(duty);
+        return new DutyResponseDto(duty.getId(),duty.getName());
     }
 
     @Override

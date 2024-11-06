@@ -22,18 +22,20 @@ public class DutyController {
     private final DutyService dutyService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADD DUTY')")
     public ResponseEntity<DutyResponseDto> save(@Valid @RequestBody DutyRequestDto dutyRequestDto) {
 
         return ResponseEntity.ok(dutyService.save(dutyRequestDto));
     }
     @GetMapping("/sub_duties")
+    @PreAuthorize("hasAuthority('GET SUB_DUTIES')")
     public ResponseEntity<List<SubDutyResponseDto>> getSubDuties(@RequestParam Long id) {
 
         return ResponseEntity.ok(dutyService.getSubDuties(id));
     }
     @GetMapping
-    public ResponseEntity<List<DutyResponseDto>> getSubDuties() {
+    @PreAuthorize("hasAuthority('GET DUTIES')")
+    public ResponseEntity<List<DutyResponseDto>> getDuties() {
 
         return ResponseEntity.ok(dutyService.getDuties());
     }
