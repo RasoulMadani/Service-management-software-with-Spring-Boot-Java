@@ -5,5 +5,5 @@ import ir.maktabsharif.achareh.dto.duty.DutyResponseDto;
 import java.util.List;
 
 public interface ScoreService {
-    Long getScore(Long userId);
+    Long getScore();
 }

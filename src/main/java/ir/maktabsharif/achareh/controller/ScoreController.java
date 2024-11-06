@@ -5,9 +5,11 @@ import ir.maktabsharif.achareh.dto.duty.DutyResponseDto;
 import ir.maktabsharif.achareh.dto.subDuty.SubDutyResponseDto;
 import ir.maktabsharif.achareh.service.dutyService.DutyService;
 import ir.maktabsharif.achareh.service.scoreService.ScoreService;
+import ir.maktabsharif.achareh.utils.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +20,11 @@ import java.util.List;
 public class ScoreController {
     private final ScoreService scoreService;
 
-    @GetMapping("/{user_id}")
-    public ResponseEntity<Long> getScoreUser(@PathVariable Long user_id) {
+    @GetMapping
+    @PreAuthorize("hasAuthority('GET SCORE')")
+    public ResponseEntity<ApiResponse> getScoreUser() {
 
-        return ResponseEntity.ok(scoreService.getScore(user_id));
+        return ResponseEntity.ok(new ApiResponse(String.valueOf(scoreService.getScore()),true));
     }
 
 }

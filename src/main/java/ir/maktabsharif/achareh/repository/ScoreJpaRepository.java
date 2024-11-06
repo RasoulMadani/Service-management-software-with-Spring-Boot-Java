@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ScoreJpaRepository extends JpaRepository<Score,Long> {
-//    @Query("SELECT SUM(s.range) FROM Score s WHERE s.user.id = :userId")
-//    Long sumAmountsByUserId(@Param("userId") Long userId);
+    @Query("SELECT SUM(s.range) FROM Score s WHERE s.user.id = :userId")
+    Long sumAmountsByUserId(@Param("userId") Long userId);
 }
