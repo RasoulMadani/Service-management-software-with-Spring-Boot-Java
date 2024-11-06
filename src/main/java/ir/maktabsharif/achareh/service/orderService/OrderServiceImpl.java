@@ -12,12 +12,15 @@ import ir.maktabsharif.achareh.repository.OrderJpaRepository;
 import ir.maktabsharif.achareh.repository.ScoreJpaRepository;
 import ir.maktabsharif.achareh.repository.SubDutyJpaRepository;
 import ir.maktabsharif.achareh.repository.userRepository.UserJpaRepository;
+import ir.maktabsharif.achareh.service.UserService.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,8 +37,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDto save(OrderRequestDto orderRequestDto) {
 
-        User findUser = userJpaRepository
-                .findById(orderRequestDto.user_id()).orElseThrow(() -> new RuleException("user.not.found"));
+        User findUser = getCurrentUser();
 
         SubDuty subDuy = subDutyJpaRepository
                 .findById(orderRequestDto.sub_duty_id()).orElseThrow(() -> new RuleException("sub_duty.not.found"));
@@ -51,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
         return new OrderResponseDto(savedOrder.getId(), findUser.getId(), subDuy.getId(), savedOrder.getSuggestionPrice(), savedOrder.getDescription(), address.getProvince(), address.getCity(), address.getStreet(), address.getDetails(), savedOrder.getDate(), savedOrder.getTime());
     }
 
+
     @Override
     public List<OrderResponseDto> getOrdersBySubDutyId(Long subDutyId) {
         List<OrderStatusEnum> statuses = List.of(OrderStatusEnum.WAITING, OrderStatusEnum.SELECT);
@@ -60,10 +63,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void changeOrderStatusToStarting(Long orderId) {
         Order order =
                 orderJpaRepository.findById(orderId)
                         .orElseThrow(() -> new RuleException("order.not.found"));
+
+//        User user = getCurrentUser();
+
+//        if(!Objects.equals(order.getUser().getId(), user.getId()))throw new RuleException("this.order.is.for.other.user");
+
         Suggestion suggestion = order.getSuggestion();
 
         Optional<Suggestion> suggestionOptional = Optional.ofNullable(order.getSuggestion());
@@ -78,6 +87,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void changeOrderStatusToPerformed(Long orderId) {
         Order order =
                 orderJpaRepository.findById(orderId)
@@ -109,8 +119,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void addScoreToOrder(Long orderId, Double range) {
-        Order order = //ceae24
+        Order order =
                 orderJpaRepository.findById(orderId)
                         .orElseThrow(() -> new RuleException("order.not.found"));
 
@@ -126,6 +137,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderCommentResponseDTO addCommentToOrder(OrderCommentRequestDto orderCommentRequestDto) {
         boolean order =
                 orderJpaRepository.existsById(orderCommentRequestDto.order_id());
@@ -189,5 +201,11 @@ public class OrderServiceImpl implements OrderService {
                 order.getDate(),
                 order.getTime()
         );
+    }
+    private User getCurrentUser() {
+        CustomUserDetails customUserDetails =
+                (CustomUserDetails)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return customUserDetails.getUser();
     }
 }

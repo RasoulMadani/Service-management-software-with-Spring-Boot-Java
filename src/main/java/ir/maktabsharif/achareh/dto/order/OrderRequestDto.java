@@ -14,8 +14,6 @@ public record OrderRequestDto(
         @Size(min = 40,max = 500, message = "{Description.Must.Between.40.to.500.Characters}")
         String description,
 
-        @NotNull(message = "{user.Id.Must.Not.Be.Null}")
-        Long user_id,
         @NotNull(message = "{sub_duty.Id.Must.Not.Be.Null}")
         Long sub_duty_id,
 

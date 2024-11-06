@@ -36,13 +36,13 @@ public class Order extends BaseEntity<Long>{
     private OrderStatusEnum status;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
@@ -51,23 +51,23 @@ public class Order extends BaseEntity<Long>{
 
     private LocalTime time;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "score_id", referencedColumnName = "id")
     private Score score;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "suggestion_id", referencedColumnName = "id")
     private Suggestion suggestion;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_duty_id", referencedColumnName = "id")
     private SubDuty subDuty;
 
-    @OneToMany(targetEntity = OrderComment.class , mappedBy="order")
+    @OneToMany(targetEntity = OrderComment.class , mappedBy="order",fetch = FetchType.LAZY)
     @Builder.Default
     private List<OrderComment> comments = new ArrayList<>();
 
-    @OneToMany(targetEntity = Suggestion.class , mappedBy="order")
+    @OneToMany(targetEntity = Suggestion.class , mappedBy="order",fetch = FetchType.LAZY)
     @Builder.Default
     private List<Suggestion> suggestions = new ArrayList<>();
 

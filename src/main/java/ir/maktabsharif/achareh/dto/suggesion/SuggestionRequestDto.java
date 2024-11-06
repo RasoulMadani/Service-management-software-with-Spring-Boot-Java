@@ -10,9 +10,6 @@ public record SuggestionRequestDto(
         @Min(value = 0, message = "{suggestion.Price.Cannot.Be.Negative}")
         Double suggestionPrice,
 
-
-        @NotNull(message = "{user.Id.Must.Not.Be.Null}")
-        Long user_id,
         @NotNull(message = "{order_id.Id.Must.Not.Be.Null}")
         Long order_id,
 
