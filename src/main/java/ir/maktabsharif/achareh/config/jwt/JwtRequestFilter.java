@@ -30,17 +30,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, jakarta.servlet.ServletException {
 
-        String requestURI = request.getRequestURI();
+//        String requestURI = request.getRequestURI();
         // مسیرهای عمومی که نیازی به احراز هویت ندارند
-        if (
-                        requestURI.startsWith("/public/**") ||
-                        requestURI.startsWith("/swagger-ui") ||
-                        requestURI.startsWith("/v3/api-docs") ||
-                        requestURI.startsWith("/swagger-ui.html")
-        ) {
-            chain.doFilter(request, response);
-            return;
-        }
+//        if (
+//                        requestURI.startsWith("/public/**") ||
+//                        requestURI.startsWith("/swagger-ui") ||
+//                        requestURI.startsWith("/v3/api-docs") ||
+//                        requestURI.startsWith("/swagger-ui.html")
+//        ) {
+//            chain.doFilter(request, response);
+//            return;
+//        }
 
         final String authorizationHeader = request.getHeader("Authorization");
 
@@ -64,10 +64,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         // بررسی اینکه اگر نام کاربری null باشد، خطای ۴۰۳ بازگردانده شود
-        if (username == null || SecurityContextHolder.getContext().getAuthentication() == null) {
-            handleException(response, "دسترسی شما به این منبع مجاز نیست.", HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
+//        if (username == null || SecurityContextHolder.getContext().getAuthentication() == null) {
+//            handleException(response, "دسترسی شما به این منبع مجاز نیست.", HttpServletResponse.SC_FORBIDDEN);
+//            return;
+//        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
