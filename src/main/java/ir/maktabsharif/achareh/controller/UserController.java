@@ -25,7 +25,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('REGISTER USER')")
+//    @PreAuthorize("hasAuthority('REGISTER USER')")
     public ResponseEntity<ApiResponse> save(@Valid @RequestBody UserRequestDto userRequestDto) {
         userService.save(userRequestDto);
         return ResponseEntity.ok(new ApiResponse("user.saved.successfully",true));
